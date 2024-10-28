@@ -1,1 +1,30 @@
-/* You can add global styles to this file, and also import other style files */
+.fill-primary {
+    background: linear-gradient(45deg,#154b6b, #387fa8, #7ed0ff);
+}
+
+.fill-side-bar {
+    background: #16425B33;
+}
+
+.btn-primary {
+    background-color: #16425B;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #154b6b;
+}
+
+.btn-invisible {
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-size: large;
+}
+
+.btn-invisible:hover {
+    background-color: #154b6b80;
+    border: none;
+    color: white;
+    font-size: large;
+}
