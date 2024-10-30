@@ -2,4 +2,19 @@
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.fill-side-bar {
+    background: #16425B33;
+}
+
+.sticky-item {
+    position: sticky;
+    align-items: start;
+    top: 0;
+}
+
+.fill-primary {
+    background: #16425B;
 }

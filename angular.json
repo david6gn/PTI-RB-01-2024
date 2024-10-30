@@ -25,6 +25,10 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "**/*",
+                "input": "public/temp_item"
               }
             ],
             "styles": [

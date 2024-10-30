@@ -1,59 +1,69 @@
-<div class="container-fluid fill-primary g0 vh-100">
-    <div class="row h-100">
-        <div class="col-md-2 fill-side-bar g-0">
-            <div class="d-flex flex-column h-100 justify-content-center g-0">
-                <div class="d-flex flex-column justify-content-center">
-                    <img src="Group 5.png" class="w-50 mx-auto">
+<div class="container-fluid g0 bg-image" style="background-image: url(background_main.jpg); height: 100vh;">
+    <div class="row">
+        <div class="col-auto fill-side-bar g-0 fill-side-bar vh-100">
+            <div class="justify-content-center g-0 sticky-item">
+                <div class="row-auto d-flex flex-column justify-content-center">
+                    <img src="logo_side_bar.png" class="w-50 mx-auto">
                     <p class="mx-auto" style="font-size: x-large; color: white; text-align: center;"><strong>Sadewa<br>Farm</strong></p>
                 </div>
-                <div class="flex-fill w-100">
-                    <div class="d-flex w-100 flex-column">
-                        <button class="btn-invisible d-flex px-3 py-3">
-                            <i class="bi bi-columns-gap ms-5 me-4" routerLink="monitoring"></i><strong>Monitoring</strong>
-                        </button>
     
-                        <button class="btn-invisible d-flex px-3 py-3"  routerLink="sensor">
-                            <i class="bi-soundwave ms-5 me-4"></i><strong>Sensor</strong>
-                        </button>
+                <div class="row-auto d-flex w-100 flex-column">
+                    <button class="btn-invisible d-flex px-3 py-3" (click)="navigateToMonitoring()">
+                        <i class="bi bi-columns-gap ms-5 me-4"></i><strong>Monitoring</strong>
+                    </button>
 
-                        <button class="btn-invisible d-flex px-3 py-3">
-                            <i class="bi-gear-wide-connected ms-5 me-4"></i><strong>Alat</strong>
-                        </button>
+                    <button class="btn-invisible d-flex px-3 py-3" (click)="navigateToSensor()">
+                        <i class="bi-soundwave ms-5 me-4"></i><strong>Sensor</strong>
+                    </button>
 
-                        <button class="btn-invisible d-flex px-3 py-3">
-                            <i class="bi-clock-history ms-5 me-4"></i><strong>Riwayat</strong>
-                        </button>
+                    <button class="btn-invisible d-flex px-3 py-3">
+                        <i class="bi-gear-wide-connected ms-5 me-4"></i><strong>Alat</strong>
+                    </button>
 
-                        <button class="btn-invisible d-flex px-3 py-3">
-                            <i class="bi-bell ms-5 me-4"></i><strong>Notifikasi</strong>
-                        </button>
-                    </div>
+                    <button class="btn-invisible d-flex px-3 py-3">
+                        <i class="bi-clock-history ms-5 me-4"></i><strong>Riwayat</strong>
+                    </button>
+
+                    <button class="btn-invisible d-flex px-3 py-3">
+                        <i class="bi-bell ms-5 me-4"></i><strong>Notifikasi</strong>
+                    </button>
                 </div>
-                <div class="d-flex flex-column w-100 justify-content-center">
-                        <button class="btn-invisible align-self-baseline w-100 d-flex px-3 py-4">
-                            <i class="bi-box-arrow-left ms-5 me-4"></i> <strong>Keluar</strong>
-                        </button>
+
+                <div class="row-auto mt-4">
+                    <button class="btn-invisible w-100 d-flex px-3 py-3 align-self-baseline">
+                        <i class="bi-box-arrow-left ms-5 me-4"></i> <strong>Keluar</strong>
+                    </button>
                 </div>
             </div>
         </div>
-        <div class="col-md vh-100 d-flex flex-column">
-            <div class="row d-flex flex-column">
-                <div class="d-flex my-3 ms-2 flex-column"> 
+
+
+        <div class="col-md d-flex flex-column g-0">
+            <div class="row-auto d-flex sticky-item align-items-center py-3 mx-4 border-bottom">
+                <div class="col d-flex flex-column justify-content-center"> 
                     <h2 class="h2 text-white">{{ time }}</h2>
                     <h6 class="h6 text-white"> {{ date }}</h6>
                 </div>
-
-                <div>
-                    aaaaaaa
+                <div class="col-auto d-flex align-items-center">
+                    <div class="col-auto me-4">
+                        <button class="btn btn-link text-white">
+                            <i class="bi bi-bell fs-4"></i>
+                        </button>
+                    </div>
+                    <div class="col-auto me-3">
+                        <img [src]="imageuser" class="rounded-circle" style="width: 70px; height: 70px;">
+                    </div>
+                    <div class="col-auto d-flex flex-column justify-content-center">
+                        <h6 class="h6 text-white fw-bold m-0">{{ username }}</h6>
+                        <p class="fst-italic text-white m-0">Owner</p>
+                    </div>
                 </div>
             </div>
-            <div class="row flex-fill">
-                <div class="">
-                    <section class="content">
-                        <router-outlet></router-outlet>
-                    </section>
-                </div>
+            <div class="flex-fill mx-4">
+                <section class="content w-100 h-100">
+                    <router-outlet></router-outlet>
+                </section>
             </div>
-        </div>
+    </div>
     </div>
 </div>

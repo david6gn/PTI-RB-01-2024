@@ -16,14 +16,12 @@ export const routes: Routes = [
         title: 'Dashboard',
         children: [
             {
-                path: '',
-                // pathMatch: 'full',
+                path: 'monitoring',
                 component: MonitoringComponent,
                 title: 'Monitoring'
             },
             {
                 path: 'sensor',
-                // pathMatch: 'full',
                 component: SensorComponent,
                 title: 'Sensor'
             }
