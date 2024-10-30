@@ -1,10 +1,3 @@
-.bg-image {
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-}
-
 .fill-side-bar {
     background: #16425B33;
 }
@@ -13,8 +6,16 @@
     position: sticky;
     align-items: start;
     top: 0;
+    z-index: 1000;
 }
 
 .fill-primary {
-    background: #16425B;
+    background: #16425B; 
+}
+
+.bg-image {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }

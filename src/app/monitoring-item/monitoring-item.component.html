@@ -1,0 +1,20 @@
+<div class="rounded card-item py-4">
+    <div class="col">
+        <div class="row d-flex flex-grow-1 mx-4">
+            <div class="col-auto d-flex flex-column">
+                <h5 class="h6 text-muted">{{monitoringItem.sensorName}}</h5>
+                <h1 class="h2 text-white fw-bold">{{ monitoringItem.sensorValue }}</h1>
+            </div>
+
+            <div class="col-auto d-flex flex-column flex-fill align-items-end">
+                <h4 class="h4 text-white">status: <b>{{ monitoringItem.sensorStatus ? 'ON' : 'OFF' }}</b></h4>
+                <div class="form-check form-switch form-switch-lg">
+                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" [(ngModel)]="isChecked" (change)="onSwitchChange()">
+                  </div>
+            </div>
+        </div>
+        <div class="row d-flex flex-grow-1 justify-content-center">
+            <div class="w-75" [chart]="lineChart"></div>
+        </div>
+    </div>
+</div>

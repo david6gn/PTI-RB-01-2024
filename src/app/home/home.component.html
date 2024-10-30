@@ -1,8 +1,8 @@
-<div class="container-fluid g0 bg-image" style="background-image: url(background_main.jpg); height: 100vh;">
-    <div class="row">
-        <div class="col-auto fill-side-bar g-0 fill-side-bar vh-100">
+<div class="container-fluid g0 bg-image"  style="background-image: url(background_main.jpg); height: 100vh;">
+    <div class="row h-100">
+        <div class="col-auto fill-side-bar g-0 fill-side-bar">
             <div class="justify-content-center g-0 sticky-item">
-                <div class="row-auto d-flex flex-column justify-content-center">
+                <div class="row-auto d-flex flex-column justify-content-center g-0">
                     <img src="logo_side_bar.png" class="w-50 mx-auto">
                     <p class="mx-auto" style="font-size: x-large; color: white; text-align: center;"><strong>Sadewa<br>Farm</strong></p>
                 </div>
@@ -16,21 +16,21 @@
                         <i class="bi-soundwave ms-5 me-4"></i><strong>Sensor</strong>
                     </button>
 
-                    <button class="btn-invisible d-flex px-3 py-3">
+                    <button class="btn-invisible d-flex px-3 py-3" (click)="navigateToTools()">
                         <i class="bi-gear-wide-connected ms-5 me-4"></i><strong>Alat</strong>
                     </button>
 
-                    <button class="btn-invisible d-flex px-3 py-3">
+                    <button class="btn-invisible d-flex px-3 py-3" (click)="navigateToHistory()">
                         <i class="bi-clock-history ms-5 me-4"></i><strong>Riwayat</strong>
                     </button>
 
-                    <button class="btn-invisible d-flex px-3 py-3">
+                    <button class="btn-invisible d-flex px-3 py-3" (click)="navigateToNotification()">
                         <i class="bi-bell ms-5 me-4"></i><strong>Notifikasi</strong>
                     </button>
                 </div>
 
                 <div class="row-auto mt-4">
-                    <button class="btn-invisible w-100 d-flex px-3 py-3 align-self-baseline">
+                    <button class="btn-invisible w-100 d-flex px-3 py-3 align-self-baseline" (click)="navigateToLogin()">
                         <i class="bi-box-arrow-left ms-5 me-4"></i> <strong>Keluar</strong>
                     </button>
                 </div>
@@ -59,11 +59,11 @@
                     </div>
                 </div>
             </div>
-            <div class="flex-fill mx-4">
-                <section class="content w-100 h-100">
+            <div class="d-flex flex-fill mx-4">
+                <section class="content flex-grow-1">
                     <router-outlet></router-outlet>
                 </section>
-            </div>
+        </div>
     </div>
     </div>
 </div>

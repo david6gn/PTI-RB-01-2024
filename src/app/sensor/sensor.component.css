@@ -1,0 +1,19 @@
+.card-item {
+    width: 100%;
+    background-color: rgba(217, 220, 214, 0.5);
+}
+
+.underline {
+    text-decoration: underline;
+    color: white;
+}
+
+.normal {
+    text-decoration: none;
+    color: grey;
+}
+
+a {
+    cursor: pointer;
+    user-select: none;
+}

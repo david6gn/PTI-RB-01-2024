@@ -3,6 +3,9 @@ import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import { MonitoringComponent } from './monitoring/monitoring.component';
 import { SensorComponent } from './sensor/sensor.component';
+import { ToolsComponent } from './tools/tools.component';
+import { HistoryComponent } from './history/history.component';
+import { NotificationComponent } from './notification/notification.component';
 
 export const routes: Routes = [
     {
@@ -24,7 +27,22 @@ export const routes: Routes = [
                 path: 'sensor',
                 component: SensorComponent,
                 title: 'Sensor'
-            }
+            },
+            {
+                path: 'tools',
+                component: ToolsComponent,
+                title: 'Alat'
+            },
+            {
+                path: 'history',
+                component: HistoryComponent,
+                title: 'Riwayat'
+            },
+            {
+                path: 'notification',
+                component: NotificationComponent,
+                title: 'Notifikasi'
+            },
         ]
     }
 ];

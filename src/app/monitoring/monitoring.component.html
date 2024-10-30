@@ -1,1 +1,5 @@
-<p>monitoring works!</p>
+<section class="section mt-4">
+    <div class="list-monitoring">
+        <app-monitoring-item *ngFor="let item of monitoringList" [monitoringItem]="item"></app-monitoring-item>
+    </div>
+</section>
