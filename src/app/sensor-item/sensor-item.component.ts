@@ -1,43 +1,49 @@
-import { Component, Input, SimpleChanges, OnChanges } from '@angular/core';
-import { Monitoringitem } from '../monitoringitem';
+import { Component, DoCheck, Input } from '@angular/core';
+import { Sensoritem } from '../sensoritem';
 import { Chart } from 'angular-highcharts';
 import { ChartModule } from 'angular-highcharts';
 import { FormsModule } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-monitoring-item',
+  selector: 'app-sensor-item',
   standalone: true,
   imports: [ChartModule, FormsModule],
-  templateUrl: './monitoring-item.component.html',
-  styleUrl: './monitoring-item.component.css'
+  templateUrl: './sensor-item.component.html',
+  styleUrl: './sensor-item.component.css'
 })
-export class MonitoringItemComponent implements OnChanges{
+export class SensorItemComponent implements DoCheck {
+  @Input() sensorItem!:Sensoritem;
 
-  constructor(private router: Router, private route: ActivatedRoute) {}
+  type: string = '';
+  sensorName: string = '';
+  sensorValue: string = '';
+  sensorStatus: boolean = false;
+  sensorHighestValue: string = '';
+  sensorLowestValue: string = '';
+  lineChart: any;
 
-  @Input() monitoringItem!:Monitoringitem;
-  
-  isChecked: boolean = false;
-  lineChart: any
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['monitoringItem']) {
-      const currentValue = changes['monitoringItem'].currentValue;
-      if (currentValue) {
-        this.isChecked = this.monitoringItem.sensorStatus;
-        this.generateChart(this.monitoringItem.sensorName)
-        for (let i = 0; i < 7; i++) {
-          this.add()
-        }
-        
-      } else {
+  ngDoCheck(): void {
+    if (this.sensorItem && this.sensorItem.sensorName !== this.sensorName) {
+       this.sensorName = this.sensorItem.sensorName;
+       this.bindData();
+       this.generateChart(this.sensorName);
+       for (let i = 0; i < 7; i++) {
+        this.add()
       }
     }
+ }
+
+  bindData() {
+    this.type = this.sensorItem.sensorName.replace(/^Sensor\s+/i, '').trim();
+    this.sensorName = this.sensorItem.sensorName
+    this.sensorValue = this.sensorItem.sensorValue
+    this.sensorStatus = this.sensorItem.sensorStatus
+    this.sensorHighestValue = this.sensorItem.sensorHighestValue
+    this.sensorLowestValue = this.sensorItem.sensorLowestValue
   }
 
   onSwitchChange() {
-    this.monitoringItem.sensorStatus = !this.monitoringItem.sensorStatus;
+    this.sensorItem.sensorStatus = !this.sensorItem.sensorStatus;
   }
 
   generateChart(name: string) {
@@ -65,7 +71,8 @@ export class MonitoringItemComponent implements OnChanges{
     this.lineChart = new Chart({
       chart: {
         type: 'line',
-        height: 150,
+        height: 220,
+        width: 500,
         borderRadius: 8,
         marginTop: 20,
         shadow: {
@@ -128,28 +135,5 @@ export class MonitoringItemComponent implements OnChanges{
 
   add() {
     this.lineChart.addPoint(Math.floor(Math.random() * 10));
-  }
-
-  navigateToDetailSensor() {
-    let type: string = '';
-  
-    switch (this.monitoringItem.sensorName) {
-      case "Sensor Suhu":
-        type = "suhu";
-        break;
-      case "Sensor pH":
-        type = "ph";
-        break;
-      case "Sensor Salinitas":
-        type = "salinitas";
-        break;
-        case "Sensor Kekeruhan":
-          type = "kekeruhan";
-          break;
-      default:
-        return;
-    }
-  
-    this.router.navigate([`dashboard/sensor`, type]);
   }
 }

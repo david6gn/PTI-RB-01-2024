@@ -1,11 +1,18 @@
-<div class="w-100 card-item my-4 rounded d-flex px-4 py-4 align-items-center">
-    <div class="col-auto d-flex flex-grow-1">
-        <h3 class="h3">Sensor {{status}}</h3>
+<div class="w-100 card-item my-4 rounded d-flex px-3 py-3 align-items-center flex-column">
+    <div class="row w-100">
+        <div class="col-auto d-flex flex-grow-1">
+            <h3 class="h3">{{sensorData.sensorName}}</h3>
+        </div>
+        <div class="col-auto d-flex">
+            <a [ngClass]="type === 'suhu' ? 'underline' : 'normal'" class="me-4" (click)="navigateToTemperatureSensor()">Suhu</a>
+            <a [ngClass]="type === 'ph' ? 'underline' : 'normal'" class="me-4" (click)="navigateTopHSensor()">pH</a>
+            <a [ngClass]="type === 'salinitas' ? 'underline' : 'normal'" class="me-4" (click)="navigateToSalinitySensor()">Salinitas</a>
+            <a [ngClass]="type === 'kekeruhan' ? 'underline' : 'normal'" class="me-4" (click)="navigateToTurbiditySensor()">Kekeruhan</a>
+        </div>
     </div>
-    <div class="col-auto d-flex">
-        <a [ngClass]="status === 'Suhu' ? 'underline' : 'normal'" class="me-4" (click)="navigate1()">Suhu</a>
-        <a [ngClass]="status === 'pH' ? 'underline' : 'normal'" class="me-4" (click)="navigate2()">pH</a>
-        <a [ngClass]="status === 'Salinitas' ? 'underline' : 'normal'" class="me-4" (click)="navigate3()">Salinitas</a>
-        <a [ngClass]="status === 'Kekeruhan' ? 'underline' : 'normal'" class="me-4" (click)="navigate4()">Kekeruhan</a>
+    <div class="row w-100 mt-2">
+        <section class="content">
+            <app-sensor-item class="w-100 d-flex align-items-center flex-column" [sensorItem]="sensorData"></app-sensor-item>
+        </section>
     </div>
 </div>

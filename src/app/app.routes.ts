@@ -6,6 +6,7 @@ import { SensorComponent } from './sensor/sensor.component';
 import { ToolsComponent } from './tools/tools.component';
 import { HistoryComponent } from './history/history.component';
 import { NotificationComponent } from './notification/notification.component';
+import { SensorItemComponent } from './sensor-item/sensor-item.component';
 
 export const routes: Routes = [
     {
@@ -26,7 +27,14 @@ export const routes: Routes = [
             {
                 path: 'sensor',
                 component: SensorComponent,
-                title: 'Sensor'
+                title: 'Sensor/:type', 
+                children: [
+                    {
+                      path: ':type', 
+                      component: SensorItemComponent,
+                      title: 'Sensor Item'
+                    }
+                  ]
             },
             {
                 path: 'tools',

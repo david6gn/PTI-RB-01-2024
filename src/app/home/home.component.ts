@@ -16,7 +16,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   private intervalId: any;
   ngOnInit(): void {
     this.updateLocalDateTime()
-    this.navigateToSensor()
+    this.navigateToMonitoring()
     this.intervalId = setInterval(() => this.updateLocalDateTime(), 1000); 
   }
 
@@ -32,7 +32,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   navigateToSensor() {
-    this.router.navigate(['sensor'], {relativeTo: this.route});
+    this.router.navigate(['sensor', "suhu"], {relativeTo: this.route});
   }
 
   navigateToTools() {
