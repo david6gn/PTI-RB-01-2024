@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ApiService } from '../api.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { LoginResponse } from '../../models/login-response';
 
 @Component({
   selector: 'app-login',
@@ -11,7 +14,7 @@ import { Router } from '@angular/router';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  constructor(private router: Router) {}
+  constructor(private router: Router, private apiService: ApiService, private snackBar: MatSnackBar) {}
   isErrorVisible: boolean = false
   isPasswordVisible: boolean = false; 
   errorText: string = "";
@@ -20,7 +23,7 @@ export class LoginComponent {
   password: string = '';
 
   togglePasswordVisibility() {
-    this.isPasswordVisible = !this.isPasswordVisible; // Toggle status
+    this.isPasswordVisible = !this.isPasswordVisible;
   }
 
   onSubmit() {
@@ -32,7 +35,7 @@ export class LoginComponent {
         this.errorText = "Password tidak boleh dibawah 8 karakter!"
         this.isErrorVisible = true
       }  else {
-        this.validateCredential()
+        this.loginUser()
         this.isErrorVisible = false
       }
     }
@@ -54,9 +57,22 @@ export class LoginComponent {
     }
   }
 
-  validateCredential() {
-    //Validate
-    this.router.navigate(['/dashboard'])
+  loginUser(): void {
+    const data = {
+      username: this.username,
+      password: this.password,
+      notification_token: "test12345"
+    }
+    this.apiService.login(data).subscribe({
+      next: (response: LoginResponse) => {
+        localStorage.setItem('token', response.token);
+        this.snackBar.open(response.message, undefined, { duration: 2000 });
+        this.router.navigate(['/dashboard']);
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    });
   }
-
+  
 }

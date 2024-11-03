@@ -1,5 +1,5 @@
 import { Component, Input, SimpleChanges, OnChanges } from '@angular/core';
-import { Monitoringitem } from '../monitoringitem';
+import { Monitoringitem } from '../../models/monitoringitem';
 import { Chart } from 'angular-highcharts';
 import { ChartModule } from 'angular-highcharts';
 import { FormsModule } from '@angular/forms';
@@ -149,7 +149,7 @@ export class MonitoringItemComponent implements OnChanges{
       default:
         return;
     }
-  
+
     this.router.navigate([`dashboard/sensor`, type]);
   }
 }

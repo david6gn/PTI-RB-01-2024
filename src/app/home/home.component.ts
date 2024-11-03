@@ -1,7 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { ApiService } from '../api.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { PostResponse } from '../../models/post-response';
 
 @Component({
   selector: 'app-home',
@@ -23,7 +25,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     clearInterval(this.intervalId);
   }
-  constructor(private router: Router, private route: ActivatedRoute) {}
+  constructor(private router: Router, private route: ActivatedRoute, private apiService: ApiService, private snackBar: MatSnackBar) {}
   username: string = "Rizki Esa Fadillah";
   imageuser: string = "/temp_item/bg_user.jpg";
 
@@ -32,7 +34,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   navigateToSensor() {
-    this.router.navigate(['sensor', "suhu"], {relativeTo: this.route});
+    this.router.navigate(['sensor', 'suhu'], {relativeTo: this.route});
   }
 
   navigateToTools() {
@@ -45,10 +47,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   navigateToNotification() {
     this.router.navigate(['notification'], {relativeTo: this.route});
-  }
-
-  navigateToLogin() {
-    this.router.navigate(['/']);
   }
 
   updateLocalDateTime() {
@@ -66,5 +64,18 @@ export class HomeComponent implements OnInit, OnDestroy {
     };
   
     return date.toLocaleDateString('id-ID', options);
+  }
+
+  logoutUser() {
+    this.apiService.logout().subscribe({
+      next: (response: PostResponse) => {
+        localStorage.clear()
+        this.snackBar.open(response.message, undefined, { duration: 2000 });
+        this.router.navigate(['/']);;
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    });
   }
 }

@@ -1,5 +1,5 @@
 import { Component, DoCheck, Input } from '@angular/core';
-import { Sensoritem } from '../sensoritem';
+import { Sensoritem } from '../../models/sensoritem';
 import { Chart } from 'angular-highcharts';
 import { ChartModule } from 'angular-highcharts';
 import { FormsModule } from '@angular/forms';

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { HomeComponent } from '../home/home.component';
 import { CommonModule } from '@angular/common';
 import { MonitoringItemComponent } from '../monitoring-item/monitoring-item.component';
-import { Monitoringitem } from '../monitoringitem';
+import { Monitoringitem } from '../../models/monitoringitem';
 
 @Component({
   selector: 'app-monitoring',
