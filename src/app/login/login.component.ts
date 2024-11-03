@@ -66,6 +66,7 @@ export class LoginComponent {
     this.apiService.login(data).subscribe({
       next: (response: LoginResponse) => {
         localStorage.setItem('token', response.token);
+        console.log(localStorage.getItem('token'))
         this.snackBar.open(response.message, undefined, { duration: 2000 });
         this.router.navigate(['/dashboard']);
       },
