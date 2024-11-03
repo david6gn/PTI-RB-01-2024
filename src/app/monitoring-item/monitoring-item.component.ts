@@ -150,6 +150,6 @@ export class MonitoringItemComponent implements OnChanges{
         return;
     }
 
-    this.router.navigate([`dashboard/sensor`, type]);
+    this.router.navigate([`sensor/data`, type],  { relativeTo: this.route.parent });
   }
 }

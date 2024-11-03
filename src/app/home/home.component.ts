@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { Router } from '@angular/router';
-import { ApiService } from '../api.service';
+import { ApiService } from '../../service/api.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PostResponse } from '../../models/post-response';
 
@@ -34,7 +34,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   navigateToSensor() {
-    this.router.navigate(['sensor', 'suhu'], {relativeTo: this.route});
+    this.router.navigate(['sensor/data', 'suhu'], {relativeTo: this.route});
   }
 
   navigateToTools() {

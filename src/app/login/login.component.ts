@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ApiService } from '../api.service';
+import { ApiService } from '../../service/api.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LoginResponse } from '../../models/login-response';
 
@@ -74,5 +74,5 @@ export class LoginComponent {
       }
     });
   }
-  
+
 }

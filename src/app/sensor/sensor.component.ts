@@ -1,87 +1,70 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SensorItemComponent } from '../sensor-item/sensor-item.component';
-import { Sensoritem } from '../../models/sensoritem';
-import { ActivatedRoute, Router } from '@angular/router';
+import { SensorDataComponent } from '../sensor-data/sensor-data.component';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { SharedService } from '../../service/shared.service';
+import { CapitalizeFirstCharPipe } from '../../pipe/capitalize-first-char.pipe';
+import { CapitalizeLastCharPipe } from '../../pipe/capitalize-last-char.pipe';
 
 @Component({
   selector: 'app-sensor',
   standalone: true,
-  imports: [CommonModule, SensorItemComponent],
+  imports: [CommonModule, SensorDataComponent, RouterOutlet, CapitalizeFirstCharPipe, CapitalizeLastCharPipe],
   templateUrl: './sensor.component.html',
   styleUrl: './sensor.component.css'
 })
-export class SensorComponent implements OnInit, OnChanges {
-  @Input('type') type ?:string;
+export class SensorComponent implements OnInit {
 
-  constructor(private router: Router, private route: ActivatedRoute) {}
-
-  sensorData: Sensoritem = {sensorName: "Sensor Suhu", sensorStatus: false, sensorValue: "24°C", sensorHighestValue: "27°C", sensorLowestValue: "21°C"};
-
-  ngOnChanges(changes: SimpleChanges): void {
-    // if (changes['type']) {
-    //   const currentValue = changes['type'].currentValue;
-    //   if (currentValue) {
-    //     switch (this.type) {
-    //       case "suhu":
-    //         this.updateSensorData("Sensor Suhu", true, "24°C", "27°C", "21°C");
-    //         break;
-    //       case "ph":
-    //         this.updateSensorData("Sensor pH", true, "6.5", "7.4", "6.1");
-    //         break;
-    //       case "salinitas":
-    //         this.updateSensorData('Sensor Salinitas', false, "35 PPT", "42 PPT", "31 PPT")
-    //         break;
-    //       case "kekeruhan":
-    //         this.updateSensorData('Sensor Kekeruhan', false, "1,42 NTU", "1,76 NTU", "1,23 NTU")
-    //         break;
-    //       default:
-    //         console.warn("Unknown sensor type");
-    //     }
-    //   } else {
-    //   }
-    // }
+  type: string = '';
+  typeString: string = '';
+  constructor(private router: Router, private route: ActivatedRoute, private sharedService: SharedService) {
+    const urlTree = this.router.parseUrl(this.router.url);
+    const primaryChild = urlTree.root.children['primary'];
+    if (primaryChild && primaryChild.segments.length > 3) {
+      this.type = primaryChild.segments[3].path;
+    } else {
+      this.type = 'suhu';
+    }
   }
+
+
   ngOnInit(): void {
-    console.log(this.type)
+    this.navigateToSensorData()
   }
 
-
-  navigateToSensor(): void {
-    this.router.navigate([`sensor`, this.type], { relativeTo: this.route.parent });
+  navigateToSensorData(): void {
+    this.router.navigate([`data`, this.type], { relativeTo: this.route, replaceUrl: true });
   }
-  
-
-  navigateToTemperatureSensor() {
-    this.type = "suhu"
-    this.navigateToSensor()
-    this.updateSensorData("Sensor Suhu", true, "24°C", "27°C", "21°C");
+  navigateToSensorInfo(): void {
+    this.router.navigate([`info`, this.type], { relativeTo: this.route, replaceUrl: true});
   }
 
-  navigateTopHSensor() {
-    this.type = "ph"
-    this.navigateToSensor()
-    this.updateSensorData("Sensor pH", true, "6.5", "7.4", "6.1");
-  }
-
-  navigateToSalinitySensor() {
-    this.type = "salinitas"
-    this.navigateToSensor()
-    this.updateSensorData('Sensor Salinitas', false, "35 PPT", "42 PPT", "31 PPT")
-  }
-
-  navigateToTurbiditySensor() {
-    this.type = "kekeruhan"
-    this.navigateToSensor()
-    this.updateSensorData('Sensor Kekeruhan', false, "1,42 NTU", "1,76 NTU", "1,23 NTU")
-  }
-
-  updateSensorData(name: string, status: boolean, value: string, highestValue: string, lowestValue: string) {
-    this.sensorData.sensorName = name
-    this.sensorData.sensorStatus = status
-    this.sensorData.sensorValue = value
-    this.sensorData.sensorHighestValue = highestValue
-    this.sensorData.sensorLowestValue = lowestValue
+  updateType(num: number): void {
+    switch (num) {
+      case 1:
+        this.type = 'suhu'
+        break;
+      case 2:
+        this.type = 'ph'
+        break;
+      case 3:
+        this.type = 'salinitas'
+        break;
+      case 4:
+        this.type = 'kekeruhan'
+        break;
+      default:
+        break;
+    }
+    const urlTree = this.router.parseUrl(this.router.url);
+    const primaryChild = urlTree.root.children['primary'];
+    if (primaryChild && primaryChild.segments.length > 3) {
+      if (primaryChild.segments[2].path === 'data') {
+        this.navigateToSensorData()
+      } else {
+          this.navigateToSensorInfo()
+      }
+    }
   }
 }
 

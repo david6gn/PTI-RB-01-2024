@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SensorItemComponent } from './sensor-item.component';
+import { SensorItemComponent } from './sensor-data.component';
 
 describe('SensorItemComponent', () => {
   let component: SensorItemComponent;

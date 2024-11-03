@@ -17,6 +17,5 @@ export class MonitoringComponent {
     { sensorName: 'Sensor pH', sensorStatus: true, sensorValue: "6,5", sensorHistory: [] },
     { sensorName: 'Sensor Salinitas', sensorStatus: false, sensorValue: "35 PPT", sensorHistory: [] },
     { sensorName: 'Sensor Kekeruhan', sensorStatus: true, sensorValue: "1,42 NTU", sensorHistory: [] }
-  
   ];
 }

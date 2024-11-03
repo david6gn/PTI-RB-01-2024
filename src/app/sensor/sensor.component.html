@@ -1,18 +1,18 @@
 <div class="w-100 card-item my-4 rounded d-flex px-3 py-3 align-items-center flex-column">
     <div class="row w-100">
-        <div class="col-auto d-flex flex-grow-1">
-            <h3 class="h3">{{sensorData.sensorName}}</h3>
+        <div class="col-auto d-flex flex-grow-1 ms-4">
+            <h3 class="h3">Sensor {{ type === 'ph' ? (type | capitalizeLastChar) : (type | capitalizeFirstChar) }}</h3>
         </div>
         <div class="col-auto d-flex">
-            <a [ngClass]="type === 'suhu' ? 'underline' : 'normal'" class="me-4" (click)="navigateToTemperatureSensor()">Suhu</a>
-            <a [ngClass]="type === 'ph' ? 'underline' : 'normal'" class="me-4" (click)="navigateTopHSensor()">pH</a>
-            <a [ngClass]="type === 'salinitas' ? 'underline' : 'normal'" class="me-4" (click)="navigateToSalinitySensor()">Salinitas</a>
-            <a [ngClass]="type === 'kekeruhan' ? 'underline' : 'normal'" class="me-4" (click)="navigateToTurbiditySensor()">Kekeruhan</a>
+            <a [ngClass]="type === 'suhu' ? 'underline' : 'normal'" class="me-4" (click)="updateType(1)">Suhu</a>
+            <a [ngClass]="type === 'ph' ? 'underline' : 'normal'" class="me-4" (click)="updateType(2)">pH</a>
+            <a [ngClass]="type === 'salinitas' ? 'underline' : 'normal'" class="me-4" (click)="updateType(3)">Salinitas</a>
+            <a [ngClass]="type === 'kekeruhan' ? 'underline' : 'normal'" class="me-4" (click)="updateType(4)">Kekeruhan</a>
         </div>
     </div>
     <div class="row w-100 mt-2">
         <section class="content">
-            <app-sensor-item class="w-100 d-flex align-items-center flex-column" [sensorItem]="sensorData"></app-sensor-item>
+            <router-outlet class="w-100 d-flex align-items-center flex-column"></router-outlet>
         </section>
     </div>
 </div>
