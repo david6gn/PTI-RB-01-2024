@@ -35,26 +35,26 @@ export class SocketService {
   }
 
   subscribe() {
-    if (this.socketURL.readyState === WebSocket.OPEN) {
-      this.socketURL.send(JSON.stringify({ action: 'subscribe', sensorType: 'temperature' }));
-      this.socketURL.send(JSON.stringify({ action: 'subscribe', sensorType: 'pH' }));
-      this.socketURL.send(JSON.stringify({ action: 'subscribe', sensorType: 'salinity' }));
-      this.socketURL.send(JSON.stringify({ action: 'subscribe', sensorType: 'turbidity' }));
-    } else {
-      this.socketURL.onopen = () => {
+      if(this.socketURL.readyState === WebSocket.OPEN) {
         this.socketURL.send(JSON.stringify({ action: 'subscribe', sensorType: 'temperature' }));
         this.socketURL.send(JSON.stringify({ action: 'subscribe', sensorType: 'pH' }));
         this.socketURL.send(JSON.stringify({ action: 'subscribe', sensorType: 'salinity' }));
         this.socketURL.send(JSON.stringify({ action: 'subscribe', sensorType: 'turbidity' }));
+      } else {
+        this.socketURL.onopen = () => {
+          this.socketURL.send(JSON.stringify({ action: 'subscribe', sensorType: 'temperature' }));
+          this.socketURL.send(JSON.stringify({ action: 'subscribe', sensorType: 'pH' }));
+          this.socketURL.send(JSON.stringify({ action: 'subscribe', sensorType: 'salinity' }));
+          this.socketURL.send(JSON.stringify({ action: 'subscribe', sensorType: 'turbidity' }));
       };
     }
   }
-  
 
-  public unsubscribe(): void {
+  unsubscribe() {
     this.socketURL.send(JSON.stringify({ action: 'unsubscribe', sensorType: 'temperature' }));
     this.socketURL.send(JSON.stringify({ action: 'unsubscribe', sensorType: 'pH' }));
     this.socketURL.send(JSON.stringify({ action: 'unsubscribe', sensorType: 'salinity' }));
     this.socketURL.send(JSON.stringify({ action: 'unsubscribe', sensorType: 'turbidity' }));
   }
+  
 }

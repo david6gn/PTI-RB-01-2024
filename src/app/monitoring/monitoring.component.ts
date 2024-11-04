@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { MonitoringItemComponent } from '../monitoring-item/monitoring-item.component';
 import { Monitoringitem } from '../../models/monitoringitem';
 import { SocketService } from '../../service/socket.service';
+import { ChartService } from '../../service/chart.service';
 
 @Component({
   selector: 'app-monitoring',
@@ -14,40 +15,41 @@ import { SocketService } from '../../service/socket.service';
 })
 export class MonitoringComponent implements OnInit, OnDestroy {
   
-  constructor(private socketService: SocketService){}
+  constructor(private socketSerivce: SocketService, private chartService: ChartService){}
 
   monitoringList: Monitoringitem[] = [
-    { sensorName: 'Sensor Suhu', sensorStatus: true, sensorValue: "..°C", sensorHistory: [] },
-    { sensorName: 'Sensor pH', sensorStatus: true, sensorValue: "...", sensorHistory: [] },
-    { sensorName: 'Sensor Salinitas', sensorStatus: false, sensorValue: ".. PPT", sensorHistory: [] },
-    { sensorName: 'Sensor Kekeruhan', sensorStatus: true, sensorValue: ".. NTU", sensorHistory: [] }
+    { sensorName: 'Sensor Suhu', sensorStatus: true, sensorValue: "- °C", sensorHistory: 0, chartId: 1 },
+    { sensorName: 'Sensor pH', sensorStatus: true, sensorValue: "- ", sensorHistory: 0, chartId: 2 },
+    { sensorName: 'Sensor Salinitas', sensorStatus: false, sensorValue: "- PPT", sensorHistory: 0, chartId: 3},
+    { sensorName: 'Sensor Kekeruhan', sensorStatus: true, sensorValue: "- NTU", sensorHistory: 0, chartId: 4 }
   ];
 
-
   ngOnInit(): void {
-    this.socketService.onMessage().subscribe((message: any) => {
-      let data = message.data.toFixed(2)
-      switch (message.sensorType) {
-        case 'temperature':
-          this.monitoringList[0].sensorValue = `${data}°C`;
-          break;
-        case 'pH':
-          this.monitoringList[1].sensorValue = `${data}`;
-          break;
-        case 'turbidity':
-          this.monitoringList[2].sensorValue = `${data} PPT`
-          break;
-        case 'salinity':
-          this.monitoringList[3].sensorValue = `${data} NTU`;
-          break;
-        default:
-          console.error('Unknown sensor type:', message.sensorType);
-      }
+    this.socketSerivce.onMessage().subscribe((message: any) => {
+        let data = Number(message.data.toFixed(2))
+        switch (message.sensorType) {
+          case 'temperature':
+            this.monitoringList[0].sensorValue = `${data} °C`
+            this.chartService.addData(`chart-${this.monitoringList[0].chartId}`, data)
+            break;
+          case 'pH':
+            this.monitoringList[1].sensorValue = `${data}`
+            this.chartService.addData(`chart-${this.monitoringList[1].chartId}`, data)
+            break;
+          case 'turbidity':
+            this.monitoringList[2].sensorValue = `${data} PPT`
+            this.chartService.addData(`chart-${this.monitoringList[2].chartId}`, data)
+            break;
+          default:
+            this.monitoringList[3].sensorValue = `${data} NTU`
+            this.chartService.addData(`chart-${this.monitoringList[3].chartId}`, data)
+            break;
+        }
     });
-    this.socketService.subscribe()
+    this.socketSerivce.subscribe()
   }
-
+  
   ngOnDestroy(): void {
-    this.socketService.unsubscribe()
+    this.socketSerivce.unsubscribe()
   }
 }

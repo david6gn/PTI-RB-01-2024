@@ -1,11 +1,12 @@
 export interface Monitoringitem {
-    sensorName: string,
-    sensorStatus: boolean,
-    sensorValue: string,
-    sensorHistory?: sensordata[]
+    sensorName: string;
+    sensorStatus: boolean;
+    sensorValue: string;
+    sensorHistory: number;
+    chartId: number;
 }
 
 export interface sensordata {
-    datetime: string,
-    value: number
+    datetime: string;
+    value: number;
 }
