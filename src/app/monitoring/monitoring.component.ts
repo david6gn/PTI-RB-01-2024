@@ -26,25 +26,64 @@ export class MonitoringComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.socketSerivce.onMessage().subscribe((message: any) => {
-        let data = Number(message.data.toFixed(2))
-        switch (message.sensorType) {
-          case 'temperature':
+      let dataArray: number[] = [];
+      let data: number = 0;
+      let isArray: boolean;
+      isArray = message.hasOwnProperty('arrayData') 
+      if (isArray) {
+        const stringArray = message.arrayData.split(',');
+        dataArray = stringArray.map(Number);
+      } else {
+        data = Number(message.data)
+      }
+      switch (message.sensorType) {
+        case 'temperature':
+          if (isArray) {
+            this.monitoringList[0].sensorValue = `${dataArray[9]} °C`
+            dataArray.forEach((value) => {
+              this.chartService.addData(`chart-${this.monitoringList[0].chartId}`, value)
+            })
+          } else {
             this.monitoringList[0].sensorValue = `${data} °C`
             this.chartService.addData(`chart-${this.monitoringList[0].chartId}`, data)
-            break;
-          case 'pH':
+          }
+          break;
+        case 'pH':
+          if (isArray) {
+            this.monitoringList[1].sensorValue = `${dataArray[9]}`
+            dataArray.forEach((value) => {
+              this.chartService.addData(`chart-${this.monitoringList[1].chartId}`, value)
+            })
+          } else {
             this.monitoringList[1].sensorValue = `${data}`
             this.chartService.addData(`chart-${this.monitoringList[1].chartId}`, data)
-            break;
-          case 'turbidity':
+          }
+          break;
+        case 'salinity':
+          if (isArray) {
+            this.monitoringList[2].sensorValue = `${dataArray[9]} PPT`
+            dataArray.forEach((value) => {
+              this.chartService.addData(`chart-${this.monitoringList[2].chartId}`, value)
+            })
+          } else {
             this.monitoringList[2].sensorValue = `${data} PPT`
             this.chartService.addData(`chart-${this.monitoringList[2].chartId}`, data)
-            break;
-          default:
+          }
+          break;
+        case 'turbidity':
+          if (isArray) {
+            this.monitoringList[3].sensorValue = `${dataArray[9]} NTU`
+            dataArray.forEach((value) => {
+              this.chartService.addData(`chart-${this.monitoringList[3].chartId}`, value)
+            })
+          } else {
             this.monitoringList[3].sensorValue = `${data} NTU`
             this.chartService.addData(`chart-${this.monitoringList[3].chartId}`, data)
-            break;
-        }
+          }
+          break;
+        default:
+          break;
+      }
     });
     this.socketSerivce.subscribe()
   }

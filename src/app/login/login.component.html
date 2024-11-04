@@ -2,11 +2,11 @@
 
     <div class="d-flex flex-column justify-content-center align-items-center vh-100 vw-25">
         <h1 class="h1 text-white">Selamat Datang!</h1>
-        <p class="text-white">Silahkan login dengan username dan password anda</p>
+        <p class="text-white">Silahkan login dengan username/email dan password anda</p>
 
         <div class="input-group mt-4 w-25 border-0">
             <span class="input-group-text border-end-0 bg-transparent text-white input-transparent" id="basic-addon1">&#64;</span>
-            <input type="text" class="form-control border-start-0 bg-transparent input-transparent" placeholder="Username" [(ngModel)]="username"/>
+            <input type="text" class="form-control border-start-0 bg-transparent input-transparent" placeholder="Username/Email" [(ngModel)]="username"/>
         </div>
 
         <div class="input-group mt-3 w-25 border-0">
@@ -22,7 +22,8 @@
         <button class="btn mt-3 w-25 btn-primary text-white" (click)="onSubmit()">Login</button>
         <p class="text-danger" *ngIf="isErrorVisible">{{ errorText }}</p>
 
-        <a href="" class="mt-4 text-white" style="text-decoration: none;" routerLink="">Lupa password?</a>
+        <button class="btn btn-transparent border-0 text-white mt-3 text-decoration-underline" (click)="openDialog()">lupa password?</button>
+
     </div>
 
 </div>

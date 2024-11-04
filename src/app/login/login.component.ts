@@ -5,16 +5,18 @@ import { Router } from '@angular/router';
 import { ApiService } from '../../service/api.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LoginResponse } from '../../models/login-response';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { DialogChangePasswordComponent } from '../dialog-change-password/dialog-change-password.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatDialogModule, DialogChangePasswordComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  constructor(private router: Router, private apiService: ApiService, private snackBar: MatSnackBar) {}
+  constructor(private router: Router, private apiService: ApiService, private snackBar: MatSnackBar, private dialog: MatDialog) {}
   isErrorVisible: boolean = false
   isPasswordVisible: boolean = false; 
   errorText: string = "";
@@ -24,6 +26,19 @@ export class LoginComponent {
 
   togglePasswordVisibility() {
     this.isPasswordVisible = !this.isPasswordVisible;
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(DialogChangePasswordComponent, {
+      width: '60%',
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(message => {
+      if(message !== null) {
+        this.snackBar.open(message, undefined, { duration: 2000 });
+      } 
+    });
   }
 
   onSubmit() {
@@ -58,15 +73,25 @@ export class LoginComponent {
   }
 
   loginUser(): void {
-    const data = {
-      username: this.username,
-      password: this.password,
-      notification_token: "test12345"
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const isValidEmail = emailRegex.test(this.username);  
+    let data = {}
+    if(isValidEmail) {
+      data = {
+        email: this.username,
+        password: this.password,
+        notification_token: "test12345"
+      }
+    }else {
+      data = {
+        username: this.username,
+        password: this.password,
+        notification_token: "test12345"
+      }
     }
     this.apiService.login(data).subscribe({
       next: (response: LoginResponse) => {
         localStorage.setItem('token', response.token);
-        console.log(localStorage.getItem('token'))
         this.snackBar.open(response.message, undefined, { duration: 2000 });
         this.router.navigate(['/dashboard']);
       },

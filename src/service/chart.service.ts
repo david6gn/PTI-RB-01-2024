@@ -11,7 +11,6 @@ export class ChartService {
   private charts: { [key: string]: Highcharts.Chart } = {};
 
   generateChart(containerId: string, name: string): Highcharts.Chart {
-    console.log(containerId)
     let color: string;
     let line: string;
 
@@ -100,7 +99,6 @@ export class ChartService {
   addData(containerId: string, data: number) {
     const now = new Date(); 
     const time = now.toLocaleTimeString();
-    console.log(time)
     const chart = this.charts[containerId]; 
     if (chart && chart.series && chart.series[0]) {
       if (chart.series[0].data.length > 10) {
