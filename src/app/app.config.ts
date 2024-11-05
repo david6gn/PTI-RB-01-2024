@@ -6,7 +6,7 @@ import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getMessaging, provideMessaging } from '@angular/fire/messaging';
-import { firebaseConfiguration } from '../environments/environment';
+import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,6 +14,6 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withComponentInputBinding()), 
     provideHttpClient(withInterceptorsFromDi()),
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true},
-    provideAnimationsAsync(), provideFirebaseApp(() => initializeApp(firebaseConfiguration)), provideMessaging(() => getMessaging())
+    provideAnimationsAsync(), provideFirebaseApp(() => initializeApp(environment.firebase)), provideMessaging(() => getMessaging())
   ]
 };

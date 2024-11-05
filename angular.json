@@ -29,7 +29,9 @@
               {
                 "glob": "**/*",
                 "input": "public/temp_item"
-              }
+              },
+              "src/firebase-messaging-sw.js",
+              "src/manifest.json"
             ],
             "styles": [
               "src/custom-theme.scss",
