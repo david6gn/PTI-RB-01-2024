@@ -6,6 +6,10 @@ import { CapitalizeFirstCharPipe } from '../../pipe/capitalize-first-char.pipe';
 import { CapitalizeLastCharPipe } from '../../pipe/capitalize-last-char.pipe';
 import { ChartService } from '../../service/chart.service';
 import { SocketService } from '../../service/socket.service';
+import { ApiService } from '../../service/api.service';
+import { SensorResponse } from '../../models/sensor-response';
+import { PostResponse } from '../../models/post-response';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-sensor-data',
@@ -17,17 +21,24 @@ import { SocketService } from '../../service/socket.service';
 export class SensorDataComponent implements OnInit, OnDestroy {
   type: string = '';
   chartId: number = 0;
+  sensorId: string = '';
   sensorName: string = '';
   sensorValue: string = '';
   sensorStatus: boolean = false;
-  sensorHighestValue: string = '';
-  sensorLowestValue: string = '';
+  sensorMaxSetting: number = 0;
+  sensorMinSetting: number = 0;
+  sensorMaxEditable: number = 0;
+  sensorMinEditable: number = 0;
   lineChart: Highcharts.Chart | undefined;
 
-  constructor(private router: Router, 
+  constructor(
+    private router: Router, 
     private route: ActivatedRoute, 
     private chartService: ChartService, 
-    private socketService: SocketService) {}
+    private socketService: SocketService,
+    private apiService: ApiService,
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {
     this.socketService.onMessage().subscribe((message: any) => {
@@ -100,25 +111,25 @@ export class SensorDataComponent implements OnInit, OnDestroy {
       switch (this.type) {
         case 'suhu':
           this.chartId = 1;
-          this.lineChart = undefined
+          this.lineChart = undefined;
           this.navigateToTemperatureSensor();
           break;
           
         case 'ph':
           this.chartId = 2;
-          this.lineChart = undefined
+          this.lineChart = undefined;
           this.navigateTopHSensor();
           break;
       
         case 'salinitas':
           this.chartId = 3;
-          this.lineChart = undefined
+          this.lineChart = undefined;
           this.navigateToSalinitySensor();
           break;
       
         case 'kekeruhan':
           this.chartId = 4;
-          this.lineChart = undefined
+          this.lineChart = undefined;
           this.navigateToTurbiditySensor();
           break;
       
@@ -137,44 +148,135 @@ export class SensorDataComponent implements OnInit, OnDestroy {
   
 
   navigateToTemperatureSensor() {
-    this.type = "suhu"
-    this.navigateToSensorData()
-    this.socketService.subscribeTemperature()
-    this.updateSensorData("Sensor Suhu", true, "- °C", "- °C", "- °C");
+    this.type = "suhu";
+    this.sensorId = 'temperature';
+    this.sensorName = 'Sensor Suhu';
+    this.navigateToSensorData();
+    this.getSensorData();
+    this.socketService.subscribeTemperature();
   }
 
   navigateTopHSensor() {
-    this.type = "ph"
-    this.navigateToSensorData()
-    this.socketService.subscribePH()
-    this.updateSensorData("Sensor pH", true, "-", "-", "-");
+    this.type = "ph";
+    this.sensorId = 'ph';
+    this.sensorName = 'Sensor pH';
+    this.navigateToSensorData();
+    this.getSensorData();
+    this.socketService.subscribePH();
   }
 
   navigateToSalinitySensor() {
-    this.type = "salinitas"
-    this.navigateToSensorData()
-    this.socketService.subscribeSalinity()
-    this.updateSensorData('Sensor Salinitas', false, "- PPT", "- PPT", "- PPT")
+    this.type = "salinitas";
+    this.sensorId = 'salinity';
+    this.sensorName = 'Sensor Salinitas';
+    this.navigateToSensorData();
+    this.getSensorData();
+    this.socketService.subscribeSalinity();
   }
 
   navigateToTurbiditySensor() {
-    this.type = "kekeruhan"
-    this.navigateToSensorData()
-    this.socketService.subscribeTurbidity()
-    this.updateSensorData('Sensor Kekeruhan', false, "- NTU", "- NTU", "- NTU")
+    this.type = "kekeruhan";
+    this.sensorId = 'turbidity';
+    this.sensorName = 'Sensor Kekeruhan';
+    this.navigateToSensorData();
+    this.getSensorData();
+    this.socketService.subscribeTurbidity();
   }
 
   onSwitchChange() {
-    this.sensorStatus = !this.sensorStatus;
+    if (this.sensorStatus) {
+      this.stopSensor()
+    } else {
+      this.startSensor()
+    }
   }
 
-  updateSensorData(name: string, status: boolean, value: string, highestValue: string, lowestValue: string) {
-    this.sensorName = name;
-    this.sensorStatus = status;
-    this.sensorValue = value;
-    this.sensorHighestValue = highestValue;
-    this.sensorLowestValue = lowestValue;
+  getSensorData() {
+    this.apiService.getSensorData(this.sensorId).subscribe({
+      next: (response: SensorResponse) => {
+        this.sensorStatus = response.data.status;
+        this.sensorMinSetting = response.data.min;
+        this.sensorMaxSetting = response.data.max;
+        this.sensorMinEditable = response.data.min;
+        this.sensorMaxEditable = response.data.max;
+      }, 
+      error: (error) => {
+        console.log(error);
+    }});
   }
+
+  startSensor() {
+    this.apiService.startSensor(this.sensorId).subscribe({
+      next: (response: PostResponse) => {
+        console.log(response)
+        if(!response.error) {
+          this.getSensorData();
+        }
+      },
+      error: (error) => {
+        console.log(error)
+      }
+    })
+  }
+
+  stopSensor() {
+    this.apiService.stopSensor(this.sensorId).subscribe({
+      next: (response: PostResponse) => {
+        if(!response.error) {
+          this.getSensorData()
+        }
+      },
+      error: (error) => {
+        console.log(error)
+      }
+    })
+  }
+
+  updateSensorSetting(): void {
+    if (this.sensorMaxEditable <= this.sensorMinSetting) {
+      this.snackBar.open("Nilai maksmimal tidak boleh lebih rendah dari nilai minimal!", undefined, { duration: 2000 });
+      return
+    }
+    if (this.sensorMinEditable >= this.sensorMaxSetting) {
+      this.snackBar.open("Nilai minimal tidak boleh lebih tinggi dari nilai maksimal!", undefined, { duration: 2000 });
+      return
+    }
+    const data = {
+      min: this.sensorMinEditable,
+      max: this.sensorMaxEditable
+    };
+    this.apiService.updateSensorSetting(data, this.sensorId).subscribe({
+      next: (response: PostResponse) => {
+        if(!response.error) {
+          this.snackBar.open(response.message, undefined, { duration: 2000 });
+          this.getSensorData();
+        } else {
+          console.log(response.message)
+        }
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    });
+  }
+
+  increaseMinSetting() {
+    this.sensorMinEditable = this.sensorMinEditable + 1;
+  }
+
+  decreaseMinSetting() {
+    this.sensorMinEditable = this.sensorMinEditable - 1;
+  }
+
+  increaseMaxSetting() {
+    this.sensorMaxEditable = this.sensorMaxEditable + 1;
+  }
+
+  decreaseMaxSetting() {
+    this.sensorMaxEditable = this.sensorMaxEditable - 1;
+  }
+
+  
 
   navigateToSensorInfo() {
     this.router.navigate(['info', this.type], { relativeTo: this.route.parent, replaceUrl: true });

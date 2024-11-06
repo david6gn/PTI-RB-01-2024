@@ -19,12 +19,14 @@ export class ApiService {
     const headers = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded'
     });
+    
     const body = new URLSearchParams();
     for (const key in data) {
       if (data.hasOwnProperty(key)) {
         body.set(key, data[key]);
       }
     }
+    
     return this.http.post<LoginResponse>(`${this.baseURL}auth/login`, body, { headers });
   }
 
@@ -36,12 +38,14 @@ export class ApiService {
     const headers = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded'
     });
+
     const body = new URLSearchParams();
     for (const key in data) {
       if (data.hasOwnProperty(key)) {
         body.set(key, data[key]);
       }
     }
+
     return this.http.post<PostResponse>(`${this.baseURL}auth/forget`, body, {headers});
   }
 
@@ -49,12 +53,14 @@ export class ApiService {
     const headers = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded'
     });
+
     const body = new URLSearchParams();
     for (const key in data) {
       if (data.hasOwnProperty(key)) {
         body.set(key, data[key]);
       }
     }
+
     return this.http.post<LoginResponse>(`${this.baseURL}auth/verify`, body, { headers });
   }
 
@@ -62,12 +68,14 @@ export class ApiService {
     const headers = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded'
     });
+
     const body = new URLSearchParams();
     for (const key in data) {
       if (data.hasOwnProperty(key)) {
         body.set(key, data[key]);
       }
     }
+
     return this.http.patch<LoginResponse>(`${this.baseURL}users/password`, body, { headers });
   }
 
@@ -81,5 +89,20 @@ export class ApiService {
 
   stopSensor(sensorId: string): Observable<PostResponse> {
     return this.http.get<PostResponse>(`${this.baseURL}configuration/${sensorId}/stop`);
+  }
+
+  updateSensorSetting(data: any, sensorId: string): Observable<PostResponse> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/x-www-form-urlencoded'
+    });
+
+    const body = new URLSearchParams();
+    for (const key in data) {
+      if (data.hasOwnProperty(key)) {
+        body.set(key, data[key]);
+      }
+    }
+
+    return this.http.put<PostResponse>(`${this.baseURL}configuration/${sensorId}`, body, { headers });
   }
 }

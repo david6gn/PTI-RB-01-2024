@@ -14,42 +14,39 @@ export class ChartService {
   generateChart(containerId: string, name: string, isBig: boolean = false): Highcharts.Chart {
     let color: string;
     let line: string;
-    let min: number;
     let max: number;
-    let tickInterval: number;
+    let tickAmount: number;
 
     let height: number;
     if(isBig) {
       height = 220;
       this.limit = 20;
+      tickAmount = 6;
     } else {
       height = 150
       this.limit = 10;
+      tickAmount = 4;
     }
 
     switch (name) {
       case "Sensor Suhu":
         color = "#FF5A5A";
         line = "#9D0000";
-        min = 26;
-        max = 32;
+        max = 33;
         break;
       case "Sensor pH":
         color = "#FF5AE5";
         line = "#9D007A";
-        min = 7.5;
-        max = 8.5;
+        max = 9;
         break;
       case "Sensor Salinitas":
         color = "#D45AFF";
         line = "#58009D";
-        min = 10;
         max = 30;
         break;
       default:
         color = "#FFB35A";
         line = "#9D5500";
-        min = 0;
         max = 30;
     }
 
@@ -89,7 +86,7 @@ export class ChartService {
           text: undefined, 
         },
         max: max,
-        tickAmount: 4,
+        tickAmount: tickAmount,
         labels: {
           style: {
             color: '#FFFFFF', 

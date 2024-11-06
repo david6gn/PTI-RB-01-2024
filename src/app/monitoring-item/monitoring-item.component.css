@@ -10,3 +10,8 @@ height: 1.8rem;
 width: calc(3rem + 0.75rem);
 border-radius: 4rem;
 }
+
+.form-check-input:disabled {
+    opacity: 1;
+    pointer-events: none;
+}

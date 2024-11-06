@@ -54,10 +54,19 @@ export class SocketService {
   }
 
   unsubscribe() {
-    this.socketURL.send(JSON.stringify({ action: 'unsubscribe', sensorType: 'temperature' }));
-    this.socketURL.send(JSON.stringify({ action: 'unsubscribe', sensorType: 'pH' }));
-    this.socketURL.send(JSON.stringify({ action: 'unsubscribe', sensorType: 'salinity' }));
-    this.socketURL.send(JSON.stringify({ action: 'unsubscribe', sensorType: 'turbidity' }));
+    if(this.socketURL.readyState === WebSocket.OPEN) {
+      this.socketURL.send(JSON.stringify({ action: 'unsubscribe', sensorType: 'temperature' }));
+      this.socketURL.send(JSON.stringify({ action: 'unsubscribe', sensorType: 'pH' }));
+      this.socketURL.send(JSON.stringify({ action: 'unsubscribe', sensorType: 'salinity' }));
+      this.socketURL.send(JSON.stringify({ action: 'unsubscribe', sensorType: 'turbidity' }));
+    } else {
+      this.socketURL.onopen = () => {
+        this.socketURL.send(JSON.stringify({ action: 'unsubscribe', sensorType: 'temperature' }));
+        this.socketURL.send(JSON.stringify({ action: 'unsubscribe', sensorType: 'pH' }));
+        this.socketURL.send(JSON.stringify({ action: 'unsubscribe', sensorType: 'salinity' }));
+        this.socketURL.send(JSON.stringify({ action: 'unsubscribe', sensorType: 'turbidity' }));
+      }
+    }
   }
   
   subscribeTemperature() {
