@@ -9,10 +9,20 @@ export class ChartService {
   constructor() { }
 
   private charts: { [key: string]: Highcharts.Chart } = {};
+  private limit = 10;
 
-  generateChart(containerId: string, name: string): Highcharts.Chart {
+  generateChart(containerId: string, name: string, isBig: boolean = false): Highcharts.Chart {
     let color: string;
     let line: string;
+
+    let height: number;
+    if(isBig) {
+      height = 220;
+      this.limit = 20;
+    } else {
+      height = 150
+      this.limit = 10;
+    }
 
     switch (name) {
       case "Sensor Suhu":
@@ -35,7 +45,7 @@ export class ChartService {
     const chart = new Highcharts.Chart(containerId, {
       chart: {
         type: 'spline',
-        height: 150,
+        height: height,
         borderRadius: 8,
         marginTop: 20,
         backgroundColor: 'rgba(0, 0, 0, 0)', 
@@ -96,12 +106,13 @@ export class ChartService {
     this.charts[containerId] = chart;
     return chart;
   }
+
   addData(containerId: string, data: number) {
     const now = new Date(); 
     const time = now.toLocaleTimeString();
     const chart = this.charts[containerId]; 
     if (chart && chart.series && chart.series[0]) {
-      if (chart.series[0].data.length > 10) {
+      if (chart.series[0].data.length > this.limit) {
         chart.series[0].addPoint([time, data], true, true);
       } else {
         chart.series[0].addPoint([time, data], true, false);

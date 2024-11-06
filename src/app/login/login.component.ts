@@ -9,6 +9,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DialogChangePasswordComponent } from '../dialog-change-password/dialog-change-password.component';
 import { getToken, Messaging, deleteToken } from '@angular/fire/messaging';
 import { environment } from '../../environments/environment';
+import { AuthService } from '../../service/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -19,16 +20,23 @@ import { environment } from '../../environments/environment';
 })
 export class LoginComponent implements OnInit {
   
-  private readonly _env = environment
-  private readonly _messaging: Messaging
-  isErrorVisible: boolean = false
+  private readonly _env = environment;
+  private readonly _messaging: Messaging;
+  isErrorVisible: boolean = false;
   isPasswordVisible: boolean = false; 
   errorText: string = "";
 
   username: string = '';
   password: string = '';
-  constructor(private router: Router, private apiService: ApiService, private snackBar: MatSnackBar, private dialog: MatDialog, messaging: Messaging) {
-    this._messaging = messaging
+  constructor(
+    private router: Router, 
+    private apiService: ApiService, 
+    private snackBar: MatSnackBar, 
+    private dialog: MatDialog, 
+    private authService: AuthService,
+    messaging: Messaging
+  ) {
+    this._messaging = messaging;
   }
 
   ngOnInit(): void {
@@ -38,7 +46,7 @@ export class LoginComponent implements OnInit {
   private _requestNotificationPermission(): void {
     Notification.requestPermission().then((permission) => {
       if (permission === 'granted') {
-        this._getDeviceToken()
+        this._getDeviceToken();
       } else {
         this.snackBar.open("Notifikasi website tidak dapat ditampilkan, mohon izinkan notifikasi untuk mendapatkan notifikasi website", undefined, { duration: 2000 });
       }
@@ -53,6 +61,7 @@ export class LoginComponent implements OnInit {
       })
       .then((token) => {
         localStorage.setItem('fcm_token', token);
+        console.log(token);
       })
       .catch((error) => {
         console.log('Token error:', error);
@@ -79,41 +88,40 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     if (!this.validateInputs()) {
-      this.errorText = "Lengkapi input terlebih dahulu!"
-      this.isErrorVisible = true
+      this.errorText = "Lengkapi input terlebih dahulu!";
+      this.isErrorVisible = true;
     } else {
       if (!this.validatePassword()) {
-        this.errorText = "Password tidak boleh dibawah 8 karakter!"
-        this.isErrorVisible = true
+        this.errorText = "Password tidak boleh dibawah 8 karakter!";
+        this.isErrorVisible = true;
       }  else {
-        this.loginUser()
-        this.isErrorVisible = false
+        this.loginUser();
+        this.isErrorVisible = false;
       }
     }
   }
 
   validateInputs(): boolean {
     if (this.username.length != 0 && this.password.length != 0) {
-      return true
+      return true;
     } else {
-      return false
+      return false;
     }
   }
 
   validatePassword(): boolean {
     if (this.password.length >= 8) {
-      return true
+      return true;
     } else {
-      return false
+      return false;
     }
   }
 
   loginUser(): void {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const isValidEmail = emailRegex.test(this.username);  
-    let data = {}
-    const token = localStorage.getItem('fcm_token')
-    console.log(token)
+    let data = {};
+    const token = localStorage.getItem('fcm_token');
     if(isValidEmail) {
       data = {
         email: this.username,
@@ -129,7 +137,7 @@ export class LoginComponent implements OnInit {
     }
     this.apiService.login(data).subscribe({
       next: (response: LoginResponse) => {
-        localStorage.setItem('token', response.token);
+        this.authService.login(response.token);
         this.snackBar.open(response.message, undefined, { duration: 2000 });
         this.router.navigate(['/dashboard']);
       },

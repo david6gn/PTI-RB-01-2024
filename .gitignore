@@ -10,7 +10,7 @@
 /node_modules
 npm-debug.log
 yarn-error.log
-/src/environments
+environments
 
 # IDEs and editors
 .idea/
@@ -47,4 +47,4 @@ Thumbs.db
 .firebase
 *-debug.log
 .runtimeconfig.json
-/src/firebase-messaging-sw.js
+firebase-messaging-sw.js

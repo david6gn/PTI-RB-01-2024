@@ -29,10 +29,11 @@ export class MonitoringComponent implements OnInit, OnDestroy {
       let dataArray: number[] = [];
       let data: number = 0;
       let isArray: boolean;
-      isArray = message.hasOwnProperty('arrayData') 
+      isArray = message.hasOwnProperty('arrayData');
       if (isArray) {
         const stringArray = message.arrayData.split(',');
         dataArray = stringArray.map(Number);
+        dataArray = dataArray.slice(10);
       } else {
         data = Number(message.data)
       }

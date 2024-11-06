@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ApiService } from '../../service/api.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PostResponse } from '../../models/post-response';
+import { AuthService } from '../../service/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -25,7 +26,13 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     clearInterval(this.intervalId);
   }
-  constructor(private router: Router, private route: ActivatedRoute, private apiService: ApiService, private snackBar: MatSnackBar) {}
+  constructor(
+    private router: Router, 
+    private route: ActivatedRoute, 
+    private apiService: ApiService,
+    private authService: AuthService, 
+    private snackBar: MatSnackBar
+  ) {}
   username: string = "Rizki Esa Fadillah";
   imageuser: string = "/temp_item/bg_user.jpg";
 
@@ -69,7 +76,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   logoutUser() {
     this.apiService.logout().subscribe({
       next: (response: PostResponse) => {
-        localStorage.clear()
+        this.authService.logout();
         this.snackBar.open(response.message, undefined, { duration: 2000 });
         this.router.navigate(['/']);;
       },

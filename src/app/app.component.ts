@@ -24,7 +24,6 @@ export class AppComponent implements OnInit {
   }
 
   private _onMessage(): void {
-    console.log('tes')
     onMessage(this._messaging, {
       next: (payload) => this.showSnackBar(String(payload.notification?.body)),
       error: (error) => console.log('Message error', error),

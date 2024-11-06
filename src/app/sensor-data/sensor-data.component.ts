@@ -1,4 +1,4 @@
-import { Component, DoCheck, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, DoCheck, Input, OnDestroy, OnInit } from '@angular/core';
 import { Sensoritem } from '../../models/sensoritem';
 import { Chart } from 'angular-highcharts';
 import { ChartModule } from 'angular-highcharts';
@@ -6,6 +6,8 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CapitalizeFirstCharPipe } from '../../pipe/capitalize-first-char.pipe';
 import { CapitalizeLastCharPipe } from '../../pipe/capitalize-last-char.pipe';
+import { ChartService } from '../../service/chart.service';
+import { SocketService } from '../../service/socket.service';
 
 @Component({
   selector: 'app-sensor-data',
@@ -14,47 +16,121 @@ import { CapitalizeLastCharPipe } from '../../pipe/capitalize-last-char.pipe';
   templateUrl: './sensor-data.component.html',
   styleUrl: './sensor-data.component.css'
 })
-export class SensorDataComponent implements OnInit {
+export class SensorDataComponent implements OnInit, OnDestroy {
   type: string = '';
+  chartId: number = 0;
   sensorName: string = '';
   sensorValue: string = '';
   sensorStatus: boolean = false;
   sensorHighestValue: string = '';
   sensorLowestValue: string = '';
-  lineChart: any;
+  lineChart: Highcharts.Chart | undefined;
 
-  constructor(private router: Router, private route: ActivatedRoute) {}
+  constructor(private router: Router, 
+    private route: ActivatedRoute, 
+    private chartService: ChartService, 
+    private socketService: SocketService) {}
 
   ngOnInit(): void {
+    this.socketService.onMessage().subscribe((message: any) => {
+      let dataArray: number[] = [];
+      let data: number = 0;
+      let isArray: boolean;
+      isArray = message.hasOwnProperty('arrayData') 
+      if (isArray) {
+        const stringArray = message.arrayData.split(',');
+        dataArray = stringArray.map(Number);
+      } else {
+        data = Number(message.data)
+      }
+      if (this.lineChart === undefined) {
+        this.lineChart = this.chartService.generateChart(`chart-detail-${this.chartId}`, this.sensorName, true)
+      }
+      switch (message.sensorType) {
+        case 'temperature':
+          if (isArray) {
+            this.sensorValue = `${dataArray[9]} °C`
+            dataArray.forEach((value) => {
+              this.chartService.addData(`chart-detail-${this.chartId}`, value)
+            })
+          } else {
+            this.sensorValue = `${data} °C`
+            this.chartService.addData(`chart-detail-${this.chartId}`, data)
+          }
+          break;
+        case 'pH':
+          if (isArray) {
+            this.sensorValue = `${dataArray[9]}`
+            dataArray.forEach((value) => {
+              this.chartService.addData(`chart-detail-${this.chartId}`, value)
+            })
+          } else {
+            this.sensorValue = `${data}`
+            this.chartService.addData(`chart-detail-${this.chartId}`, data)
+          }
+          break;
+        case 'salinity':
+          if (isArray) {
+            this.sensorValue = `${dataArray[9]} PPT`
+            dataArray.forEach((value) => {
+              this.chartService.addData(`chart-detail-${this.chartId}`, value)
+            })
+          } else {
+            this.sensorValue = `${data} PPT`
+            this.chartService.addData(`chart-detail-${this.chartId}`, data)
+          }
+          break;
+        case 'turbidity':
+          if (isArray) {
+            this.sensorValue = `${dataArray[9]} NTU`
+            dataArray.forEach((value) => {
+              this.chartService.addData(`chart-detail-${this.chartId}`, value)
+            })
+          } else {
+            this.sensorValue = `${data} NTU`
+            this.chartService.addData(`chart-detail-${this.chartId}`, data)
+          }
+          break;
+        default:
+          break;
+      }
+    });
+
     this.route.params.subscribe(params => {
       this.type = params['type']; 
+      this.socketService.unsubscribe()
       switch (this.type) {
         case 'suhu':
+          this.chartId = 1;
+          this.lineChart = undefined
           this.navigateToTemperatureSensor();
           break;
           
         case 'ph':
+          this.chartId = 2;
+          this.lineChart = undefined
           this.navigateTopHSensor();
           break;
       
         case 'salinitas':
+          this.chartId = 3;
+          this.lineChart = undefined
           this.navigateToSalinitySensor();
           break;
       
         case 'kekeruhan':
+          this.chartId = 4;
+          this.lineChart = undefined
           this.navigateToTurbiditySensor();
           break;
       
         default:
+          this.chartId = 1;
+          this.lineChart = undefined
           this.navigateToTemperatureSensor();
           break;
       }
-      this.generateChart(this.type)
-      for (let i = 0; i < 7; i++) {
-        this.add();
-      }
     });
-
   }
 
   navigateToSensorData(): void {
@@ -65,131 +141,48 @@ export class SensorDataComponent implements OnInit {
   navigateToTemperatureSensor() {
     this.type = "suhu"
     this.navigateToSensorData()
-    this.updateSensorData("Sensor Suhu", true, "24°C", "27°C", "21°C");
+    this.socketService.subscribeTemperature()
+    this.updateSensorData("Sensor Suhu", true, "- °C", "- °C", "- °C");
   }
 
   navigateTopHSensor() {
     this.type = "ph"
     this.navigateToSensorData()
-    this.updateSensorData("Sensor pH", true, "6.5", "7.4", "6.1");
+    this.socketService.subscribePH()
+    this.updateSensorData("Sensor pH", true, "-", "-", "-");
   }
 
   navigateToSalinitySensor() {
     this.type = "salinitas"
     this.navigateToSensorData()
-    this.updateSensorData('Sensor Salinitas', false, "35 PPT", "42 PPT", "31 PPT")
+    this.socketService.subscribeSalinity()
+    this.updateSensorData('Sensor Salinitas', false, "- PPT", "- PPT", "- PPT")
   }
 
   navigateToTurbiditySensor() {
     this.type = "kekeruhan"
     this.navigateToSensorData()
-    this.updateSensorData('Sensor Kekeruhan', false, "1,42 NTU", "1,76 NTU", "1,23 NTU")
+    this.socketService.subscribeTurbidity()
+    this.updateSensorData('Sensor Kekeruhan', false, "- NTU", "- NTU", "- NTU")
   }
 
   onSwitchChange() {
     this.sensorStatus = !this.sensorStatus;
   }
 
-  generateChart(name: string) {
-    let color: string;
-    let line: string;
-
-    switch (name) {
-      case "suhu":
-        color = "#FF5A5A";
-        line = "#9D0000";
-        break;
-      case "ph":
-        color = "#FF5AE5";
-        line = "#9D007A";
-        break;
-      case "salinitas":
-        color = "#D45AFF";
-        line = "#58009D";
-        break;
-      default:
-        color = "#FFB35A";
-        line = "#9D5500";
-    }
-
-    this.lineChart = new Chart({
-      chart: {
-        type: 'line',
-        height: 220,
-        width: 500,
-        borderRadius: 8,
-        marginTop: 20,
-        shadow: {
-          color: 'rgba(0, 0, 0, 0.5)', 
-          offsetX: 2,                 
-          offsetY: 2,                 
-          opacity: 0.1,                
-          width: 3                   
-        },
-      },
-      title: {
-        text: undefined
-      },
-      xAxis: {
-        categories: ['10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00'],
-        title: {
-          text: undefined,
-        },
-        margin: 0,
-        labels: {
-          y: 12,
-          style: {
-            color: '#666666',
-            fontSize: '10px', 
-          }
-        }
-      },
-      yAxis: {
-        title: {
-          text: undefined, 
-        },
-        tickInterval: 2,
-        labels: {
-          style: {
-            color: '#666666', 
-            fontSize: '10px', 
-          }
-        }
-      },
-      series: [
-        {
-          type: 'line',
-          data: [],
-          color: line,
-          showInLegend: false,
-          marker: {
-            enabled: true,
-            fillColor: color,
-            lineWidth: 2,
-            lineColor: color
-          } 
-        }
-      ],
-      credits: {
-        enabled: false
-      }
-    });
-  }
-
   updateSensorData(name: string, status: boolean, value: string, highestValue: string, lowestValue: string) {
-    this.sensorName = name
-    this.sensorStatus = status
-    this.sensorValue = value
-    this.sensorHighestValue = highestValue
-    this.sensorLowestValue = lowestValue
-  }
-
-
-  add() {
-    this.lineChart.addPoint(Math.floor(Math.random() * 10));
+    this.sensorName = name;
+    this.sensorStatus = status;
+    this.sensorValue = value;
+    this.sensorHighestValue = highestValue;
+    this.sensorLowestValue = lowestValue;
   }
 
   navigateToSensorInfo() {
     this.router.navigate(['info', this.type], { relativeTo: this.route.parent, replaceUrl: true });
+  }
+
+  ngOnDestroy(): void {
+    this.socketService.unsubscribe();
   }
 }

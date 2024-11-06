@@ -8,11 +8,15 @@ import { HistoryComponent } from './history/history.component';
 import { NotificationComponent } from './notification/notification.component';
 import { SensorDataComponent } from './sensor-data/sensor-data.component';
 import { SensorInfoComponent } from './sensor-info/sensor-info.component';
+import { AuthGuard } from './auth.guard'; 
+
+
 export const routes: Routes = [
     {
         path: '',
         component: LoginComponent,
-        title: 'Login'
+        title: 'Login',
+        canActivate: [AuthGuard]
     },
     {
         path: 'dashboard',

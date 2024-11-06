@@ -1,17 +1,20 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 import { Observable } from 'rxjs';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SocketService {
-  private baseURL = environment.apiUrl;
-  private token = localStorage.getItem('token');
-  private socketURL = new WebSocket(`${this.baseURL}ws?token=${this.token}`);
-
-  constructor() { 
-
+  private baseURL: string;
+  private token: string;
+  private socketURL: WebSocket;
+  constructor(authService: AuthService) { 
+    this.token = authService.getToken();
+    this.baseURL = environment.apiUrl;
+    this.socketURL = new WebSocket(`${this.baseURL}ws?token=${this.token}`);
+    
     this.socketURL.onopen = () => {
       console.log('Connected to the WebSocket server');
     };
@@ -57,4 +60,59 @@ export class SocketService {
     this.socketURL.send(JSON.stringify({ action: 'unsubscribe', sensorType: 'turbidity' }));
   }
   
+  subscribeTemperature() {
+      if(this.socketURL.readyState === WebSocket.OPEN) {
+        this.socketURL.send(JSON.stringify({ action: 'subscribe', sensorType: 'temperature' }));
+      } else {
+        this.socketURL.onopen = () => {
+          this.socketURL.send(JSON.stringify({ action: 'subscribe', sensorType: 'temperature' }));
+      };
+    }
+  }
+
+  subscribePH() {
+      if(this.socketURL.readyState === WebSocket.OPEN) {
+        this.socketURL.send(JSON.stringify({ action: 'subscribe', sensorType: 'pH' }));
+      } else {
+        this.socketURL.onopen = () => {
+          this.socketURL.send(JSON.stringify({ action: 'subscribe', sensorType: 'pH' }));
+      };
+    }
+  }
+
+  subscribeSalinity() {
+      if(this.socketURL.readyState === WebSocket.OPEN) {
+        this.socketURL.send(JSON.stringify({ action: 'subscribe', sensorType: 'salinity' }));
+      } else {
+        this.socketURL.onopen = () => {
+          this.socketURL.send(JSON.stringify({ action: 'subscribe', sensorType: 'salinity' }));
+      };
+    }
+  }
+
+  subscribeTurbidity() {
+      if(this.socketURL.readyState === WebSocket.OPEN) {
+        this.socketURL.send(JSON.stringify({ action: 'subscribe', sensorType: 'turbidity' }));
+      } else {
+        this.socketURL.onopen = () => {
+          this.socketURL.send(JSON.stringify({ action: 'subscribe', sensorType: 'turbidity' }));
+      };
+    }
+  }
+
+  unsubscribeTemperature() {
+    this.socketURL.send(JSON.stringify({ action: 'unsubscribe', sensorType: 'temperature' }));
+  }
+
+  unsubscribePH() {
+    this.socketURL.send(JSON.stringify({ action: 'unsubscribe', sensorType: 'pH' }));
+  }
+
+  unsubscribeSalinity() {
+    this.socketURL.send(JSON.stringify({ action: 'unsubscribe', sensorType: 'salinity' }));
+  }
+
+  unsubscribeTurbidity() {
+    this.socketURL.send(JSON.stringify({ action: 'unsubscribe', sensorType: 'turbidity' }));
+  }
 }
