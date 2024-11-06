@@ -1,6 +1,4 @@
-import { AfterViewInit, Component, DoCheck, Input, OnDestroy, OnInit } from '@angular/core';
-import { Sensoritem } from '../../models/sensoritem';
-import { Chart } from 'angular-highcharts';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ChartModule } from 'angular-highcharts';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';

@@ -25,7 +25,10 @@ export class AppComponent implements OnInit {
 
   private _onMessage(): void {
     onMessage(this._messaging, {
-      next: (payload) => this.showSnackBar(String(payload.notification?.body)),
+      next: (payload) => {
+        this.showSnackBar(String(payload.notification?.body))
+        console.log(payload)
+      },
       error: (error) => console.log('Message error', error),
       complete: () => console.log('Done listening to messages'),
     });

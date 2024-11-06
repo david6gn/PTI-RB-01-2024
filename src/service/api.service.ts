@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../environments/environment';
 import { LoginResponse } from '../models/login-response';
 import { PostResponse } from '../models/post-response';
+import { SensorResponse } from '../models/sensor-response';
 
 
 @Injectable({
@@ -31,7 +32,7 @@ export class ApiService {
     return this.http.get<PostResponse>(`${this.baseURL}auth/logout`);
   }
 
-  requestOTP(data:any): Observable<PostResponse> {
+  requestOTP(data: any): Observable<PostResponse> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded'
     });
@@ -44,7 +45,7 @@ export class ApiService {
     return this.http.post<PostResponse>(`${this.baseURL}auth/forget`, body, {headers});
   }
 
-  verifyOTP(data:any): Observable<LoginResponse> {
+  verifyOTP(data: any): Observable<LoginResponse> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded'
     });
@@ -57,7 +58,7 @@ export class ApiService {
     return this.http.post<LoginResponse>(`${this.baseURL}auth/verify`, body, { headers });
   }
 
-  changePassword(data:any): Observable<PostResponse> {
+  changePassword(data: any): Observable<PostResponse> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded'
     });
@@ -68,5 +69,17 @@ export class ApiService {
       }
     }
     return this.http.patch<LoginResponse>(`${this.baseURL}users/password`, body, { headers });
+  }
+
+  getSensorData(sensorId: string): Observable<SensorResponse> {
+    return this.http.get<SensorResponse>(`${this.baseURL}configuration/${sensorId}`);
+  }
+
+  startSensor(sensorId: string): Observable<PostResponse> {
+    return this.http.get<PostResponse>(`${this.baseURL}configuration/${sensorId}/start`);
+  }
+
+  stopSensor(sensorId: string): Observable<PostResponse> {
+    return this.http.get<PostResponse>(`${this.baseURL}configuration/${sensorId}/stop`);
   }
 }

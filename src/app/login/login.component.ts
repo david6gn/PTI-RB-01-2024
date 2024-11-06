@@ -7,7 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { LoginResponse } from '../../models/login-response';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DialogChangePasswordComponent } from '../dialog-change-password/dialog-change-password.component';
-import { getToken, Messaging, deleteToken } from '@angular/fire/messaging';
+import { getToken, Messaging } from '@angular/fire/messaging';
 import { environment } from '../../environments/environment';
 import { AuthService } from '../../service/auth.service';
 
@@ -46,7 +46,6 @@ export class LoginComponent implements OnInit {
   private _requestNotificationPermission(): void {
     Notification.requestPermission().then((permission) => {
       if (permission === 'granted') {
-        this._getDeviceToken();
       } else {
         this.snackBar.open("Notifikasi website tidak dapat ditampilkan, mohon izinkan notifikasi untuk mendapatkan notifikasi website", undefined, { duration: 2000 });
       }
@@ -55,13 +54,10 @@ export class LoginComponent implements OnInit {
 
 
   private _getDeviceToken(): void {
-    deleteToken(this._messaging)
-      .then(() => {
-        return getToken(this._messaging, { vapidKey: this._env.vapidKey });
-      })
+    getToken(this._messaging, { vapidKey: this._env.vapidKey })
       .then((token) => {
         localStorage.setItem('fcm_token', token);
-        console.log(token);
+        this.loginUser();
       })
       .catch((error) => {
         console.log('Token error:', error);
@@ -95,7 +91,7 @@ export class LoginComponent implements OnInit {
         this.errorText = "Password tidak boleh dibawah 8 karakter!";
         this.isErrorVisible = true;
       }  else {
-        this.loginUser();
+        this._getDeviceToken()
         this.isErrorVisible = false;
       }
     }

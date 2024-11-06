@@ -5,6 +5,7 @@ import { ApiService } from '../../service/api.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PostResponse } from '../../models/post-response';
 import { AuthService } from '../../service/auth.service';
+import { Messaging, deleteToken } from '@angular/fire/messaging';
 
 @Component({
   selector: 'app-home',
@@ -17,6 +18,19 @@ export class HomeComponent implements OnInit, OnDestroy {
   time: string = '';
   date: string = '';
   private intervalId: any;
+  private readonly _messaging: Messaging;
+
+  constructor(
+    private router: Router, 
+    private route: ActivatedRoute, 
+    private apiService: ApiService,
+    private authService: AuthService, 
+    private snackBar: MatSnackBar,
+    messaging: Messaging
+  ) {
+    this._messaging = messaging
+  }
+  
   ngOnInit(): void {
     this.updateLocalDateTime()
     this.navigateToMonitoring()
@@ -26,13 +40,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     clearInterval(this.intervalId);
   }
-  constructor(
-    private router: Router, 
-    private route: ActivatedRoute, 
-    private apiService: ApiService,
-    private authService: AuthService, 
-    private snackBar: MatSnackBar
-  ) {}
+
   username: string = "Rizki Esa Fadillah";
   imageuser: string = "/temp_item/bg_user.jpg";
 
@@ -72,6 +80,17 @@ export class HomeComponent implements OnInit, OnDestroy {
   
     return date.toLocaleDateString('id-ID', options);
   }
+
+  deleteDeviceToken(): Promise<void> {
+    return deleteToken(this._messaging)
+      .then(() => {
+        this.logoutUser()
+      })
+      .catch((error) => {
+        console.log('Error deleting device token:', error);
+      });
+  }
+  
 
   logoutUser() {
     this.apiService.logout().subscribe({
