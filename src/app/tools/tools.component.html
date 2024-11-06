@@ -1,1 +1,188 @@
-<p>tools works!</p>
+<div class="w-100 card-item mt-3 rounded d-flex px-4 py-3 align-items-center flex-column">
+    <div class="d-flex w-100">
+        <div class="d-flex flex-fill flex-column">
+            <h3 class="h3 fw-bold">Kontrol Pakan</h3>
+            <h6 class="h6">Penjadwalan pemberian pakan udang</h6>
+        </div>
+        <div class="d-flex w-25 flex-column align-items-end">
+            <div class="d-flex flex-column align-items-center">
+                <h5 class="h5 text-white">status: <b>{{ feederStatus ? 'ON' : 'OFF' }}</b></h5>
+                <div class="form-check form-switch form-switch-lg" (click)="onSwitchChange()">
+                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" [checked]="feederStatus" [disabled]="true">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex w-100">
+        <div class="w-50 d-flex flex-column mt-2">
+            <div class="w-100">
+                <div class="w-75 d-flex">
+                    <div class="w-25">
+                        <h6 class="w-100 text-center h6 text-white">Waktu</h6>
+                    </div>
+                    <div class="w-75 d-flex align-items-end flex-column">
+                        <h6 class="w-50 h6 text-white px-2">Jumlah Pakan</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="row w-75 d-flex align-items-center">
+                <div class="w-25">
+                    <input type="time" class="form-control-lg border-0" [(ngModel)]="feedTime[0]"/>
+                </div>
+                <div class="w-75 d-flex align-items-end flex-column">
+                    <div class="w-50 d-flex align-items-center mt-2">
+                        <i class="bi bi-arrow-left bg-white px-2" (click)="decreaseFeedAmount(0)"></i>
+                        <input class="form-control w-50 bg-transparent border-0 text-white text-center" type="number" [(ngModel)]="feedAmount[0]"/>
+                        <i class="bi bi-arrow-right bg-white px-2" (click)="increaseFeedAmount(0)"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="row w-75 d-flex align-items-center">
+                <div class="w-25">
+                    <input type="time" class="form-control-lg border-0" [(ngModel)]="feedTime[1]"/>
+                </div>
+                <div class="w-75 d-flex justify-content-end">
+                    <div class="w-50 d-flex align-items-center">
+                        <i class="bi bi-arrow-left bg-white px-2" (click)="decreaseFeedAmount(1)"></i>
+                        <input class="form-control w-50 bg-transparent border-0 text-white text-center" type="number" [(ngModel)]="feedAmount[1]"/>
+                        <i class="bi bi-arrow-right bg-white px-2" (click)="increaseFeedAmount(1)"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="row w-75 d-flex align-items-center">
+                <div class="w-25">
+                    <input type="time" class="form-control-lg border-0" [(ngModel)]="feedTime[2]"/>
+                </div>
+                <div class="w-75 d-flex justify-content-end">
+                    <div class="w-50 d-flex align-items-center">
+                        <i class="bi bi-arrow-left bg-white px-2" (click)="decreaseFeedAmount(2)"></i>
+                        <input class="form-control w-50 bg-transparent border-0 text-white text-center" type="number" [(ngModel)]="feedAmount[2]"/>
+                        <i class="bi bi-arrow-right bg-white px-2" (click)="increaseFeedAmount(2)"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="row w-75 d-flex align-items-center">
+                <div class="w-25">
+                    <input type="time" class="form-control-lg border-0" [(ngModel)]="feedTime[3]"/>
+                </div>
+                <div class="w-75 d-flex justify-content-end">
+                    <div class="w-50 d-flex align-items-center">
+                        <i class="bi bi-arrow-left bg-white px-2" (click)="decreaseFeedAmount(3)"></i>
+                        <input class="form-control w-50 bg-transparent border-0 text-white text-center" type="number" [(ngModel)]="feedAmount[3]"/>
+                        <i class="bi bi-arrow-right bg-white px-2" (click)="increaseFeedAmount(3)"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="w-50 border-start ps-4 mt-2">
+            <div class="w-100">
+                <div class="w-75 d-flex">
+                    <div class="w-25 d-flex align-items-end">
+                        <h6 class="ms-3 ps-1 h6 text-white">Waktu</h6>
+                    </div>
+                    <div class="w-75 d-flex align-items-end flex-column">
+                        <h6 class="w-50 h6 text-white">Jumlah Pakan</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="row w-75 d-flex align-items-center">
+                <div class="w-25">
+                    <input type="time" class="form-control-lg border-0" id="result" [(ngModel)]="feedTime[0]" [disabled]="true"/>
+                </div>
+                <div class="w-75 d-flex align-items-end flex-column">
+                    <h5 class="w-50 text-center h5 border-bottom text-white">{{ feedAmount[0] }} Gram</h5>
+                </div>
+            </div>
+            <div class="row w-75 d-flex align-items-center">
+                <div class="w-25">
+                    <input type="time" class="form-control-lg border-0" id="result" [(ngModel)]="feedTime[1]" [disabled]="true"/>
+                </div>
+                <div class="w-75 d-flex align-items-end flex-column">
+                    <h5 class="w-50 text-center h5 border-bottom text-white">{{ feedAmount[1] }} Gram</h5>
+                </div>
+            </div>
+            <div class="row w-75 d-flex align-items-center">
+                <div class="w-25">
+                    <input type="time" class="form-control-lg border-0" id="result" [(ngModel)]="feedTime[2]" [disabled]="true"/>
+                </div>
+                <div class="w-75 d-flex align-items-end flex-column">
+                    <h5 class="w-50 text-center h5 border-bottom text-white">{{ feedAmount[2] }} Gram</h5>
+                </div>
+            </div>
+            <div class="row w-75 d-flex align-items-center">
+                <div class="w-25">
+                    <input type="time" class="form-control-lg border-0" id="result" [(ngModel)]="feedTime[3]" [disabled]="true"/>
+                </div>
+                <div class="w-75 d-flex align-items-end flex-column">
+                    <h5 class="w-50 text-center h5 border-bottom text-white">{{ feedAmount[3] }} Gram</h5>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-end me-4 align-items-baseline flex-column">
+            <button class="btn border-black px-4" (click)="updateFeederSetting()">Simpan</button>
+        </div>
+    </div>
+</div>
+
+<div class="w-100 card-item mt-3 rounded d-flex px-4 py-3 flex-column">
+    <div class="d-flex w-100">
+        <div class="d-flex flex-fill flex-column">
+            <h2 class="h2 fw-bold">Kontrol Kincir</h2>
+            <h6 class="h6">Pengaturan waktu interval kincir air sebelum dan sesudah pemberian pakan</h6>
+        </div>
+        <div class="d-flex w-25 flex-column align-items-end">
+            <div class="d-flex flex-column align-items-center">
+                <h4 class="h4 text-white">status: <b>{{ feederStatus ? 'ON' : 'OFF' }}</b></h4>
+                <div class="form-check form-switch form-switch-lg" (click)="onSwitchChange()">
+                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" [checked]="feederStatus" [disabled]="true">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="w-100 d-flex">
+        <div class="w-100">
+            <div class="d-flex w-100">
+                <div class="row d-flex w-75 mt-2 align-items-center">
+                    <div class="d-flex flex-column w-75">
+                        <h5 class="h5 text-white fw-bold">Waktu interval sebelum pemberian pakan</h5>
+                        <h6 class="h6 text-white">Atur waktu interval dalam satuan menit</h6>
+                    </div>
+                    <div class="d-flex w-25 align-items-center">
+                        <div>
+                            <i class="bi bi-arrow-left bg-white px-2" (click)="decreaseAeratorTime(0)"></i>
+                        </div>
+                        <input class="form-control w-50 bg-transparent border-0 text-white text-center" type="number" [(ngModel)]="aeratorTime[0]"/>
+                        <div>
+                            <i class="bi bi-arrow-right bg-white px-2" (click)="increaseAeratorTime(0)"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="d-flex w-100">
+                <div class="row d-flex w-75 mt-2 align-items-center">
+                    <div class="d-flex flex-column w-75">
+                        <h5 class="h5 text-white fw-bold">Waktu interval sebelum pemberian pakan</h5>
+                        <h6 class="h6 text-white">Atur waktu interval dalam satuan menit</h6>
+                    </div>
+                    <div class="d-flex w-25 align-items-center">
+                        <div>
+                            <i class="bi bi-arrow-left bg-white px-2" (click)="decreaseAeratorTime(1)"></i>
+                        </div>
+                        <input class="form-control w-50 bg-transparent border-0 text-white text-center" type="number" [(ngModel)]="aeratorTime[1]"/>
+                        <div>
+                            <i class="bi bi-arrow-right bg-white px-2" (click)="increaseAeratorTime(1)"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex flex-fill align-items-end justify-content-end me-4">
+            <button class="btn border-black px-4" (click)="updateAeratorSetting()">Simpan</button>
+        </div>
+    </div>
+</div>

@@ -5,6 +5,7 @@ import { environment } from '../environments/environment';
 import { LoginResponse } from '../models/login-response';
 import { PostResponse } from '../models/post-response';
 import { SensorResponse } from '../models/sensor-response';
+import { ToolsResponse } from '../models/tools-response';
 
 
 @Injectable({
@@ -19,7 +20,7 @@ export class ApiService {
     const headers = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded'
     });
-    
+
     const body = new URLSearchParams();
     for (const key in data) {
       if (data.hasOwnProperty(key)) {
@@ -104,5 +105,39 @@ export class ApiService {
     }
 
     return this.http.put<PostResponse>(`${this.baseURL}configuration/${sensorId}`, body, { headers });
+  }
+
+  getToolsData(): Observable<ToolsResponse> {
+    return this.http.get<ToolsResponse>(`${this.baseURL}configuration/actuator`);
+  }
+
+  updateFeederSetting(data: any): Observable<PostResponse> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/x-www-form-urlencoded'
+    });
+
+    const body = new URLSearchParams();
+    for (const key in data) {
+      if (data.hasOwnProperty(key)) {
+        body.set(key, data[key]);
+      }
+    }
+
+    return this.http.put<PostResponse>(`${this.baseURL}configuration/feeder/schedule`, body, { headers });
+  }
+
+  updateAeratorSetting(data: any): Observable<PostResponse> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/x-www-form-urlencoded'
+    });
+
+    const body = new URLSearchParams();
+    for (const key in data) {
+      if (data.hasOwnProperty(key)) {
+        body.set(key, data[key]);
+      }
+    }
+
+    return this.http.put<PostResponse>(`${this.baseURL}configuration/aerator/schedule`, body, {headers});
   }
 }

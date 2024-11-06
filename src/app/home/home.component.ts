@@ -30,10 +30,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   ) {
     this._messaging = messaging
   }
-  
+
   ngOnInit(): void {
     this.updateLocalDateTime()
-    this.navigateToMonitoring()
+    this.navigateToTools()
     this.intervalId = setInterval(() => this.updateLocalDateTime(), 1000); 
   }
 
@@ -53,15 +53,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   navigateToTools() {
-    this.router.navigate(['tools'], {relativeTo: this.route});
+    this.router.navigate(['alat'], {relativeTo: this.route});
   }
 
   navigateToHistory() {
-    this.router.navigate(['history'], {relativeTo: this.route});
+    this.router.navigate(['riwayat'], {relativeTo: this.route});
   }
 
   navigateToNotification() {
-    this.router.navigate(['notification'], {relativeTo: this.route});
+    this.router.navigate(['notifikasi'], {relativeTo: this.route});
   }
 
   updateLocalDateTime() {

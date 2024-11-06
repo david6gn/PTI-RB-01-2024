@@ -1,0 +1,58 @@
+input[type="time"]:focus {
+    border: none; 
+    background-color: #16425B; 
+    box-shadow: none; 
+    outline: none;
+    color: white;
+    margin-top: 0;
+    padding-bottom: 0;
+    padding-top: 0;
+}
+
+input[type="time"]:not(:focus) {
+    border: 1px transparent; 
+    background-color: transparent; 
+    color: white;
+    margin-top: 0;
+    padding-bottom: 0;
+    padding-top: 0;
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator{
+    filter: invert(100%);
+}
+
+#result::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
+    width: 0;
+    padding: 0;
+    margin: 0;
+}
+
+.card-item {
+    width: 100%;
+    background-color: rgba(217, 220, 214, 0.5);
+}
+
+.form-switch.form-switch-lg .form-check-input {
+    height: 1.5rem;
+    width: calc(3rem + 0.75rem);
+    border-radius: 4rem;
+    }
+    
+.form-check-input:disabled {
+    opacity: 1;
+    pointer-events: none;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none; 
+    box-shadow: none;
+}

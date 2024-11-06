@@ -1,4 +1,4 @@
-<div class="w-100 card-item my-4 rounded d-flex px-3 py-3 align-items-center flex-column">
+<div class="w-100 card-item mt-3 rounded d-flex px-3 py-3 align-items-center flex-column">
     <div class="row w-100">
         <div class="col-auto d-flex flex-grow-1 ms-4">
             <h3 class="h3">Sensor {{ type === 'ph' ? (type | capitalizeLastChar) : (type | capitalizeFirstChar) }}</h3>
@@ -10,7 +10,7 @@
             <a [ngClass]="type === 'kekeruhan' ? 'underline' : 'normal'" class="me-4" (click)="updateType(4)">Kekeruhan</a>
         </div>
     </div>
-    <div class="row w-100 mt-2">
+    <div class="row w-100 mt-4">
         <section class="content">
             <router-outlet class="w-100 d-flex align-items-center flex-column"></router-outlet>
         </section>

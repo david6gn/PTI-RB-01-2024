@@ -46,17 +46,17 @@ export const routes: Routes = [
                   ]
             },
             {
-                path: 'tools',
+                path: 'alat',
                 component: ToolsComponent,
                 title: 'Alat'
             },
             {
-                path: 'history',
+                path: 'riwayat',
                 component: HistoryComponent,
                 title: 'Riwayat'
             },
             {
-                path: 'notification',
+                path: 'notifikasi',
                 component: NotificationComponent,
                 title: 'Notifikasi'
             },
