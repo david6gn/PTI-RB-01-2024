@@ -3,13 +3,14 @@
         <h3 class="h3">Riwayat</h3>
     </div>
 
-    <div class="d-flex w-100 mt-4" *ngFor="let history of historyData | paginate: {itemsPerPage: limit, currentPage: page}">
+    <div class="d-flex w-100 mt-4" *ngFor="let history of historyData | paginate: {itemsPerPage: limit, currentPage: currentPage, totalItems: totalItem}">
         <div class="w-100 d-flex align-items-center border-bottom">
             <div class="w-50 d-flex flex-column">
-                <h6 class="h6">Data kondisi tambak {{ history['date:'] | date: 'dd MMMM yyyy' }}</h6>
+                <h6 class="h6 g-0 m-0">Data kondisi tambak {{ history.date | date: 'dd MMMM yyyy' }}</h6>
+                <p class="text-muted fs-6 g-0 m-0">Rangkuman keseluruhan data sensor pada tambak</p>
             </div>
             <div class="d-flex flex-fill justify-content-center">
-                <h6 class="h6">{{ history['date:'] | date: 'dd/MM/yyyy' }}</h6>
+                <h6 class="h6">{{ history.date | date: 'dd/MM/yyyy' }}</h6>
             </div>
             <div class="w-25 d-flex justify-content-end mb-2">
                 <button class="btn border-black px-4" (click)="navigateToDetailHistory(history)">Lihat detail</button>
@@ -18,6 +19,6 @@
     </div>
 
     <div class="d-flex w-100 justify-content-center mt-4">
-        <pagination-controls (pageChange)="page = $event"></pagination-controls>
+        <pagination-controls (pageChange)="onPageChange($event)"></pagination-controls>
     </div>
 </div>

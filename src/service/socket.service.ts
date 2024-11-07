@@ -9,23 +9,56 @@ import { AuthService } from './auth.service';
 export class SocketService {
   private baseURL: string;
   private token: string;
-  private socketURL: WebSocket;
+  private socketURL!: WebSocket;
+  private maxRetryAttempts: number = 5; 
+  private retryInterval: number = 3000;
+  private retryAttempts: number = 0;
+
   constructor(authService: AuthService) { 
     this.token = authService.getToken();
     this.baseURL = environment.apiUrl;
+    this.connectToWebSocket();
+  }
+
+  public connectToWebSocket(): void {
+    if (this.socketURL && this.socketURL.readyState === WebSocket.OPEN) {
+      return
+    }
     this.socketURL = new WebSocket(`${this.baseURL}ws?token=${this.token}`);
     
     this.socketURL.onopen = () => {
-      console.log('Connected to the WebSocket server');
+      this.retryAttempts = 0;
     };
 
     this.socketURL.onclose = () => {
-      console.log('Disconnected from the WebSocket server');
+      if (this.retryAttempts < this.maxRetryAttempts) {
+        this.retryAttempts++;
+        setTimeout(() => {
+          this.connectToWebSocket();
+        }, this.retryInterval);
+      }
     };
 
     this.socketURL.onerror = (error) => {
       console.error('WebSocket error:', error);
+
+      if (this.retryAttempts < this.maxRetryAttempts) {
+          this.retryAttempts++;
+          setTimeout(() => {
+            this.connectToWebSocket();
+          }, this.retryInterval);
+      } else {
+        console.log('Max retry attempts reached');
+      }
     };
+  }
+  
+
+  public closeConnection() {
+    this.socketURL.onclose = () => {}
+    if (this.socketURL) {
+      this.socketURL.close();
+    }
   }
 
   public onMessage(): Observable<any> {

@@ -14,7 +14,6 @@ interface AeratorData {
 }
 
 interface FeederData {
-    feeder_status: boolean;
     schedule_1: FeederSchedule;
     schedule_2: FeederSchedule;
     schedule_3: FeederSchedule;

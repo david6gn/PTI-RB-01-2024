@@ -53,7 +53,12 @@ export class DialogChangePasswordComponent {
     this.dialogRef.close(null);
   }
 
-  requestOTP() {
+  requestOTP(): void {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if(!emailRegex.test(this.email)) {
+      alert("Inputkan email yang valid!")
+      return
+    }
     const data = {
       user_email: this.email
     }
@@ -100,7 +105,12 @@ export class DialogChangePasswordComponent {
     }
   }
 
-  changePassword(){
+  changePassword(): void {
+    const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    if (!regex.test(this.password)) {
+      alert("Password minimal harus 8 karakter serta mengandung minimal 1 angka dan huruf!")
+      return
+    }
     const data = {
       new_password: this.password
     }

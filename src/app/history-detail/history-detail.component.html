@@ -4,7 +4,7 @@
     </div>
 
     <div class="w-100 mt-2">
-        <h6 class="h6">Data kondisi tambak {{ history['date:'] | date: 'dd MMMM yyyy' }}</h6>
+        <h6 class="h6">Data kondisi tambak {{ history.date | date: 'dd MMMM yyyy' }}</h6>
     </div>
 
     <div class="w-100 mt-4 d-flex fill text-white py-3">
@@ -13,12 +13,12 @@
         <h4 class="h5 w-25 text-center">Status Sensor</h4>
         <h4 class="h5 w-25 text-center">Keterangan</h4>
     </div>
-    <div class="d-flex w-100" *ngFor="let log of activatedFilter | paginate: {itemsPerPage: limit, currentPage: page}">
+    <div class="d-flex w-100 rounded corner-radius" *ngFor="let log of activatedFilter | paginate: {itemsPerPage: limit, currentPage: page}">
         <div class="w-100 d-flex border-bottom bg-white py-2">
-            <h6 class="h6 w-25 text-center">{{log.time}}</h6>
-            <h6 class="h6 w-25 text-center">{{log.value}}</h6>
+            <h6 class="h6 w-25 text-center">{{ log.time }}</h6>
+            <h6 class="h6 w-25 text-center">{{ log.value }}</h6>
             <h6 class="h6 w-25 text-center">{{ log.status === true ? 'Aktif' : 'Inaktif' }}</h6>
-            <h6 class="h6 w-25 text-center">{{log.time}}</h6>
+            <h6 class="h6 w-25 text-center">{{ log.info }}</h6>
         </div>
     </div>
 

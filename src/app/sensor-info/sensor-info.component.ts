@@ -28,7 +28,6 @@ export class SensorInfoComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.type = params['type'];
-      console.log(this.type);
       switch (this.type) {
         case 'suhu':
           this.imageSensor = 'sensor_suhu.png';

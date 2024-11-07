@@ -59,7 +59,6 @@ export class MonitoringItemComponent implements AfterViewInit{
   startSensor() {
     this.apiService.startSensor(this.monitoringItem.sensorId).subscribe({
       next: (response: PostResponse) => {
-        console.log(response)
         if(!response.error) {
           this.getSensorData();
         }
@@ -73,7 +72,6 @@ export class MonitoringItemComponent implements AfterViewInit{
   stopSensor() {
     this.apiService.stopSensor(this.monitoringItem.sensorId).subscribe({
       next: (response: PostResponse) => {
-        console.log(response)
         if(!response.error) {
           this.getSensorData()
         }

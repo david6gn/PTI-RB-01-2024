@@ -6,12 +6,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { PostResponse } from '../../models/post-response';
 import { AuthService } from '../../service/auth.service';
 import { Messaging, deleteToken } from '@angular/fire/messaging';
-import { DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, CommonModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -43,7 +43,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   username: string = "Rizki Esa Fadillah";
-  imageuser: string = "/temp_item/bg_user.jpg";
+  imageuser: string = "";
 
   navigateToMonitoring() {
     this.router.navigate(['monitoring'], {relativeTo: this.route});

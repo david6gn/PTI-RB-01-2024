@@ -208,7 +208,6 @@ export class SensorDataComponent implements OnInit, OnDestroy {
   startSensor() {
     this.apiService.startSensor(this.sensorId).subscribe({
       next: (response: PostResponse) => {
-        console.log(response)
         if(!response.error) {
           this.getSensorData();
         }
@@ -233,11 +232,11 @@ export class SensorDataComponent implements OnInit, OnDestroy {
   }
 
   updateSensorSetting(): void {
-    if (this.sensorMaxEditable <= this.sensorMinSetting) {
+    if (this.sensorMaxEditable <= this.sensorMinEditable) {
       this.snackBar.open("Nilai maksmimal tidak boleh lebih rendah dari nilai minimal!", undefined, { duration: 2000 });
       return
     }
-    if (this.sensorMinEditable >= this.sensorMaxSetting) {
+    if (this.sensorMinEditable >= this.sensorMaxEditable) {
       this.snackBar.open("Nilai minimal tidak boleh lebih tinggi dari nilai maksimal!", undefined, { duration: 2000 });
       return
     }

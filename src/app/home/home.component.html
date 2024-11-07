@@ -45,13 +45,13 @@
                     <h6 class="h6 text-white"> {{ date }}</h6>
                 </div>
                 <div class="col-auto d-flex align-items-center">
-                    <div class="col-auto me-4">
-                        <button class="btn btn-link text-white">
-                            <i class="bi bi-bell fs-4"></i>
-                        </button>
-                    </div>
                     <div class="col-auto me-3">
-                        <img [src]="imageuser" class="rounded-circle" style="width: 70px; height: 70px;">
+                        <div *ngIf="imageuser; else defaultProfile">
+                            <img [src]="imageuser" class="rounded-circle" style="width: 70px; height: 70px;">
+                          </div>
+                          <ng-template #defaultProfile>
+                            <i class="bi bi-person-circle" style="width: 70px; height: 70px; font-size: 45px; border-radius: 50%; display: inline-block; text-align: center; color: white;"></i>
+                          </ng-template>
                     </div>
                     <div class="col-auto d-flex flex-column justify-content-center">
                         <h6 class="h6 text-white fw-bold m-0">{{ username }}</h6>

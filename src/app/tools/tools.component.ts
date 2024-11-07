@@ -16,7 +16,6 @@ import { error } from 'highcharts';
 export class ToolsComponent implements OnInit {
   feedTime: string[] = ['', '', '', ''];
   feedAmount: number[] = [0, 0, 0, 0];
-  feederStatus: boolean = false;
   aeratorTime: number[] = [0, 0];
   
   constructor(private apiService: ApiService, private snackBar: MatSnackBar) {}
@@ -25,7 +24,6 @@ export class ToolsComponent implements OnInit {
     this.apiService.getToolsData().subscribe({
       next: (response: ToolsResponse) => {
         if(!response.error) {
-          this.feederStatus = response.data.feeder.feeder_status;
           this.feedTime[0] = response.data.feeder.schedule_1.time;
           this.feedTime[1] = response.data.feeder.schedule_2.time;
           this.feedTime[2] = response.data.feeder.schedule_3.time;
@@ -58,9 +56,7 @@ export class ToolsComponent implements OnInit {
 
     this.apiService.updateFeederSetting(data).subscribe({
       next: (response: PostResponse) => {
-        if(!response.error){
-          // this.snackBar.open(response.message, undefined, {duration: 2000});
-        }
+
       },
       error: (error) => {
         console.log(error)
@@ -76,9 +72,6 @@ export class ToolsComponent implements OnInit {
 
     this.apiService.updateAeratorSetting(data).subscribe({
       next: (response: PostResponse) => {
-        if(!response.error) {
-          // this.snackBar.open(response.message, undefined, {duration: 2000});
-        }
       },
       error: (error) => {
         console.log(error)

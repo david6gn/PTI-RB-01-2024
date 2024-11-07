@@ -38,28 +38,33 @@ export class HistoryDetailComponent implements OnInit{
     this.turbiditySensor = [];
 
     logs.forEach(log => {
+      const time = this.convertUTCtoWIB(log.time)
       this.temperatureSensor.push({
-        time: log.time,
+        time: time,
         value: log.temperature,
-        status: log.temperature_status
+        status: log.temperature_status,
+        info: log.temperature_info
       });
 
       this.phSensor.push({
-        time: log.time,
+        time: time,
         value: log.ph,
-        status: log.ph_status
+        status: log.ph_status,
+        info: log.ph_info
       });
 
       this.salinitySensor.push({
-        time: log.time,
+        time: time,
         value: log.salinity,
-        status: log.salinity_status
+        status: log.salinity_status,
+        info: log.salinity_info
       });
 
       this.turbiditySensor.push({
-        time: log.time,
+        time: time,
         value: log.turbidity,
-        status: log.turbidity_status
+        status: log.turbidity_status,
+        info: log.turbidity_info
       });
     });
   }
@@ -86,5 +91,20 @@ export class HistoryDetailComponent implements OnInit{
         this.activatedFilter = this.temperatureSensor;
         break;
     }
+  }
+
+
+  convertUTCtoWIB(utcTime: string) {
+    const [hours, minutes] = utcTime.split(':').map(Number);
+  
+    let wibHours = hours + 7;
+    if (wibHours >= 24) {
+      wibHours -= 24;
+    }
+  
+    const formattedHours = wibHours.toString().padStart(2, '0');
+    const formattedMinutes = minutes.toString().padStart(2, '0');
+
+    return `${formattedHours}:${formattedMinutes}`;
   }
 }
