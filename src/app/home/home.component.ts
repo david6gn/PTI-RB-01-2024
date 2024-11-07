@@ -34,7 +34,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.updateLocalDateTime()
-    this.navigateToMonitoring()
+    this.navigateToUserManagement()
     this.intervalId = setInterval(() => this.updateLocalDateTime(), 1000); 
   }
 
@@ -43,7 +43,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   username: string = "Rizki Esa Fadillah";
-  imageuser: string = "";
+  gif: string [] = ["https://media.tenor.com/uwFCK7sFjYUAAAAd/wow-amazing.gif", "gif.gif"]
+  imageuser: string = this.gif[Math.floor(Math.random() * this.gif.length)];
 
   navigateToMonitoring() {
     this.router.navigate(['monitoring'], {relativeTo: this.route});
@@ -63,6 +64,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   navigateToNotification() {
     this.router.navigate(['notifikasi'], {relativeTo: this.route});
+  }
+
+  navigateToUserManagement() {
+    this.router.navigate(['managemen'], {relativeTo: this.route});
   }
 
   updateLocalDateTime() {

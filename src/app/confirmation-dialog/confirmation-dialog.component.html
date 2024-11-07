@@ -1,0 +1,8 @@
+<div class="my-4 px-4 w-100 d-flex flex-column align-items-center">
+    <h5 class="h5 w-100 text-center">{{ data.title }}</h5>
+    <p class="p fs-6">{{ data.message }}</p>
+    <div class="w-100 d-flex">
+        <button class="btn btn-info text-white me-2 w-50" (click)="onCancel()">Tidak</button>
+        <button class="btn btn-info text-white ms-2 w-50" (click)="onConfirm()">Ya</button>
+    </div>
+</div>

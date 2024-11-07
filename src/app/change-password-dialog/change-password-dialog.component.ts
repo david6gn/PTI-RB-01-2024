@@ -22,10 +22,10 @@ import { LoginResponse } from '../../models/login-response';
     FormsModule,
     NgOtpInputModule
   ],
-  templateUrl: './dialog-change-password.component.html',
-  styleUrl: './dialog-change-password.component.css'
+  templateUrl: './change-password-dialog.component.html',
+  styleUrl: './change-password-dialog.component.css'
 })
-export class DialogChangePasswordComponent {
+export class ChangePasswordDialogComponent {
 
   @ViewChild("ngOtpInput") ngOtpInput: any;
   isEmailSent: boolean = false;
@@ -40,7 +40,7 @@ export class DialogChangePasswordComponent {
   }
 
   constructor(
-    private dialogRef: MatDialogRef<DialogChangePasswordComponent>,
+    private dialogRef: MatDialogRef<ChangePasswordDialogComponent>,
     private apiService: ApiService
   ) {
   }

@@ -1,0 +1,17 @@
+.card-item {
+    width: 100%;
+    background-color: rgba(217, 220, 214, 0.5);
+}
+
+.fill {
+    background-color: #16425B;
+    color: white;
+}
+
+td, th {
+    font-size: 14px; /* Ukuran font default untuk setiap <td> */
+    padding: 0px;
+    margin: 0px;/* Padding pada setiap <td> */
+    text-align: center; /* Text align center untuk setiap <td> */
+    border: 1px solid #ddd; /* Border default untuk setiap <td> */
+}

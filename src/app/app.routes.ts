@@ -10,6 +10,8 @@ import { SensorDataComponent } from './sensor-data/sensor-data.component';
 import { SensorInfoComponent } from './sensor-info/sensor-info.component';
 import { AuthGuard } from './auth.guard'; 
 import { HistoryDetailComponent } from './history-detail/history-detail.component';
+import { UserManagementComponent } from './user-management/user-management.component';
+import { NewUserComponent } from './new-user/new-user.component';
 
 
 export const routes: Routes = [
@@ -66,8 +68,23 @@ export const routes: Routes = [
                 component: NotificationComponent,
                 title: 'Notifikasi'
             },
+            {
+                path: 'managemen',
+                component: UserManagementComponent,
+                title: 'Managemen User'
+            },
+            {
+                path: 'managemen/tambah',
+                component: NewUserComponent,
+                title: 'Tambah User'
+            },
         ]
-    }
+    },
+    {
+        path: '**',
+        component: LoginComponent,
+        title: 'Login',
+    },
 ];
 
 export const routing = RouterModule.forRoot(routes);

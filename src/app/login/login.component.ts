@@ -6,7 +6,7 @@ import { ApiService } from '../../service/api.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LoginResponse } from '../../models/login-response';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { DialogChangePasswordComponent } from '../dialog-change-password/dialog-change-password.component';
+import { ChangePasswordDialogComponent } from '../change-password-dialog/change-password-dialog.component';
 import { getToken, Messaging } from '@angular/fire/messaging';
 import { environment } from '../../environments/environment';
 import { AuthService } from '../../service/auth.service';
@@ -14,7 +14,7 @@ import { AuthService } from '../../service/auth.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatDialogModule, DialogChangePasswordComponent],
+  imports: [CommonModule, FormsModule, MatDialogModule,ChangePasswordDialogComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -70,7 +70,7 @@ export class LoginComponent implements OnInit {
   }
 
   openDialog(): void {
-    const dialogRef = this.dialog.open(DialogChangePasswordComponent, {
+    const dialogRef = this.dialog.open(ChangePasswordDialogComponent, {
       width: '60%',
       disableClose: true
     });

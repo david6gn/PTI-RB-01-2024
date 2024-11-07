@@ -14,7 +14,7 @@ import { CommonModule } from '@angular/common';
 export class HistoryDetailComponent implements OnInit{
   history: HistoryItem;
   page: number = 1;
-  limit: number = 6;
+  limit: number = 7;
   temperatureSensor: any[] = [];
   phSensor: any[] = [];
   salinitySensor: any[] = [];

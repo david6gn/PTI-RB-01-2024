@@ -9,6 +9,8 @@ import { ToolsResponse } from '../models/tools-response';
 import { HistoryResponse } from '../models/history-response';
 import { NotificationResponse } from '../models/notification-response';
 import { NotificationDetailResponse } from '../models/notification-detail-response';
+import { UserResponse } from '../models/user-response';
+import { NewUserResponse } from '../models/new-user-response';
 
 
 @Injectable({
@@ -155,6 +157,39 @@ export class ApiService {
   }
 
   getNotificationDetail(id: string): Observable<NotificationDetailResponse> {
-    return this.http.get<NotificationDetailResponse>(`${this.baseURL}notifications/${id}`)
+    return this.http.get<NotificationDetailResponse>(`${this.baseURL}notifications/${id}`);
+  }
+
+  getUserList(): Observable<UserResponse> {
+    return this.http.get<UserResponse>(`${this.baseURL}users`);
+  }
+
+  addNewUser(data: any): Observable<NewUserResponse>{
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/x-www-form-urlencoded'
+    });
+
+    const body = new URLSearchParams();
+    for (const key in data) {
+      if (data.hasOwnProperty(key)) {
+        body.set(key, data[key]);
+      }
+    }
+    return this.http.post<NewUserResponse>(`${this.baseURL}users`, body, {headers});
+  }
+
+  verifyNewUser(data: any, userId: string): Observable<PostResponse> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/x-www-form-urlencoded'
+    });
+
+    const body = new URLSearchParams();
+    for (const key in data) {
+      if (data.hasOwnProperty(key)) {
+        body.set(key, data[key]);
+      }
+    }
+
+    return this.http.post<PostResponse>(`${this.baseURL}users/${userId}/verify`, body, { headers })
   }
 }

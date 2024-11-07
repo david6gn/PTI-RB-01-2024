@@ -1,0 +1,46 @@
+<div class="w-100 card-item mt-3 rounded d-flex px-4 py-3 align-items-center flex-column">
+    <div class="w-100 mb-2 d-flex">
+        <div class="d-flex flex-fill flex-column">
+            <h3 class="h3">Managemen User</h3>
+            <h6 class="h6">Daftar pengguna yang terdaftar pada sistem Tambak Udang Sadewa</h6>
+        </div>
+        <div class="d-flex align-items-end justify-content-end">
+            <button class="btn border-black px-4" (click)="navigateToAddUser()">Tambah User Baru</button>
+        </div>
+    </div>
+    <table class="mt-3" style="table-layout: auto; width: 100%;">
+        <thead class="fill">
+            <tr>
+                <th class="text-center py-3 border" style="word-wrap: break-word;">Username</th>
+                <th class="text-center py-3 border" style="word-wrap: break-word;">Nama</th>
+                <th class="text-center py-3 border" style="word-wrap: break-word;">Email</th>
+                <th class="text-center py-3 border" style="word-wrap: break-word;">Tipe</th>
+                <th class="text-center py-3 border" style="word-wrap: break-word;">Tanggal Buat</th>
+                <th class="text-center py-3 border" style="word-wrap: break-word;">Tanggal Update</th>
+                <th class="text-center py-3 border" style="word-wrap: break-word;">Aksi</th>
+            </tr>
+        </thead>
+        <tbody class="bg-white">
+            <tr *ngFor="let user of userList | paginate: {itemsPerPage: limit, currentPage: page}">
+                <td class="text-center py-3 border">{{ user.username }}</td>
+                <td class="text-center py-3 border">{{ user.name }}</td>
+                <td class="text-center py-3 border">{{ user.email }}</td>
+                <td class="text-center py-3 border">{{ user.type }}</td>
+                <td class="text-center py-3 border">{{ user.createdAt | date: 'dd/MM/yyyy' }}</td>
+                <td class="text-center py-3 border">{{ user.updatedAt | date: 'dd/MM/yyyy' }}</td>
+                <td class="text-center py-3 border">
+                    <button class="btn btn-primary mx-1 g-0 m-0">
+                        <i class="bi bi-pencil"></i>
+                      </button>
+                      
+                      <button class="btn btn-danger mx-1 g-0 m-0" (click)="openDialog()">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="d-flex w-100 mt-3 justify-content-center">
+        <pagination-controls (pageChange)="page = $event"></pagination-controls>
+    </div>
+</div>

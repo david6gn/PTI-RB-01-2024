@@ -1,0 +1,30 @@
+.card-item {
+    width: 100%;
+    background-color: rgba(217, 220, 214, 0.5);
+}
+
+
+.form-control:focus {
+    outline: none;
+    box-shadow: none;
+    color: black;
+}
+
+.form-control {
+    outline: none;
+    box-shadow: none;
+    color: black;
+}
+
+.form-select:focus {
+    outline: none;
+    box-shadow: none;
+    color: black;
+}
+
+.btn-toggle, .btn-toggle:active {
+    outline: none;
+    box-shadow: none;
+    border: none;
+    background-color: white;
+}

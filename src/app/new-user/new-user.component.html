@@ -1,0 +1,51 @@
+<div class="w-100 card-item mt-3 rounded d-flex px-4 py-3 align-items-center flex-column">
+    <h3 class="h3">Tambah User Baru</h3>
+
+    <div class="w-50 d-flex align-items-center flex-column">
+        <div class="input-group mt-3 w-75 border-0">
+            <span class="input-group-text border-end-0 input-transparent" id="basic-addon1"> <i class="bi bi-card-text"></i></span>
+            <input type="text" class="form-control border-start-0 input-transparent" placeholder="Nama" [(ngModel)]="name"/>
+        </div>
+
+        <div class="input-group mt-3 w-75 border-0">
+            <span class="input-group-text border-end-0 input-transparent" id="basic-addon1">&#64;</span>
+            <input type="text" class="form-control border-start-0 input-transparent" placeholder="Email" [(ngModel)]="email"/>
+        </div>
+
+        <div class="input-group mt-3 w-75 border-0">
+            <span class="input-group-text border-end-0 input-transparent" id="basic-addon1"> <i class="bi bi-person"></i></span>
+            <input type="text" class="form-control border-start-0 input-transparent" placeholder="Username" [(ngModel)]="username"/>
+        </div>
+
+        <div class="input-group mt-3 w-75 border-0">
+            <span class="input-group-text border-end-0 input-transparent" id="basic-addon1">
+                <i class="bi-person-badge"></i>
+            </span>
+            <select class="form-select border-start-0 input-transparent" [(ngModel)]="role">
+                <option value="" disabled selected>Pilih Role</option>
+                <option value="pengelola">Pengelola</option>
+                <option value="admin">Admin</option>
+            </select>
+        </div>
+
+        <div class="input-group mt-3 w-75 border-0">
+            <input type="password" id="typePassword" class="form-control border-start-0 border-end-0" placeholder="Password" [(ngModel)]="password" [type]="isPasswordVisible[0] ? 'text' : 'password'"/>
+            <button class="btn btn-toggle border-start-0" (click)="togglePasswordVisibility(0)" type="button">
+                <i class="bi border-start-0" [ngClass]="isPasswordVisible[0] ? 'bi-eye-slash' : 'bi-eye'"></i>
+            </button>
+        </div>
+
+        <div class="input-group mt-3 w-75 border-0">
+            <input type="password" id="typePassword" class="form-control border-start-0 border-end-0" placeholder="Konfirmasi password" [(ngModel)]="passwordConfirmation" [type]="isPasswordVisible[1] ? 'text' : 'password'"/>
+            <button class="btn btn-toggle border-start-0" (click)="togglePasswordVisibility(1)" type="button">
+                <i class="bi border-start-0" [ngClass]="isPasswordVisible[1] ? 'bi-eye-slash' : 'bi-eye'"></i>
+            </button>
+        </div>
+        <button class="btn mt-2 w-50 btn-primary text-white" (click)="validateInput()">Registerasi akun</button>
+        <ng-otp-input 
+        [config]="{length: 4, allowNumbersOnly: true }" 
+        #ngOtpInput class="mt-2">
+        </ng-otp-input>
+        <button class="btn mt-2 w-50 btn-primary text-white" (click)="verifyOTP()">Verifikasi akun</button>
+    </div>
+</div>
