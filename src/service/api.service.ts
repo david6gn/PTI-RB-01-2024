@@ -192,4 +192,8 @@ export class ApiService {
 
     return this.http.post<PostResponse>(`${this.baseURL}users/${userId}/verify`, body, { headers })
   }
+
+  deleteUser(userId: string): Observable<PostResponse> {
+    return this.http.delete<PostResponse>(`${this.baseURL}users/${userId}`);
+  }
 }

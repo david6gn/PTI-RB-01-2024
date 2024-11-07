@@ -6,6 +6,8 @@ import { UserItem, UserResponse } from '../../models/user-response';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { ActivatedRoute, Router } from '@angular/router';
+import { PostResponse } from '../../models/post-response';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-user-management',
@@ -26,10 +28,15 @@ export class UserManagementComponent implements OnInit {
     private apiService: ApiService, 
     private dialog: MatDialog,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
+    this.getUserList();
+  }
+
+  getUserList() {
     this.apiService.getUserList().subscribe({
       next: (response: UserResponse) => {
         if(!response.error) {
@@ -39,10 +46,10 @@ export class UserManagementComponent implements OnInit {
       error: (error) => {
         console.log(error)
       }
-    })
+    });
   }
 
-  openDialog() {
+  openDialog(userId: string) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       data: {
         message: this.dialogMessage,
@@ -52,9 +59,26 @@ export class UserManagementComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log('Item deleted');
+        this.deleteUser(userId);
       }
     });
+  }
+
+  deleteUser(userId: string) {
+    this.apiService.deleteUser(userId).subscribe({
+      next: (response: PostResponse) => {
+        console.log(response)
+        if(!response.error) {
+          this.snackBar.open(response.message, undefined, {duration: 2000});
+          this.getUserList();
+        } else {
+          this.snackBar.open(response.message, undefined, {duration: 2000});
+        }
+      },
+      error: (error) => {
+        console.log(error)
+      }
+    })
   }
 
   navigateToAddUser() {
