@@ -1,0 +1,38 @@
+<div class="w-100 card-item mt-3 rounded d-flex px-4 py-3 align-items-center flex-column">
+    <div class="d-flex w-100">
+        <h3 class="h3">Detail Riwayat</h3>
+    </div>
+
+    <div class="w-100 mt-2">
+        <h6 class="h6">Data kondisi tambak {{ history['date:'] | date: 'dd MMMM yyyy' }}</h6>
+    </div>
+
+    <div class="w-100 mt-4 d-flex fill text-white py-3">
+        <h4 class="h5 w-25 text-center">Waktu</h4>
+        <h4 class="h5 w-25 text-center">Nilai</h4>
+        <h4 class="h5 w-25 text-center">Status Sensor</h4>
+        <h4 class="h5 w-25 text-center">Keterangan</h4>
+    </div>
+    <div class="d-flex w-100" *ngFor="let log of activatedFilter | paginate: {itemsPerPage: limit, currentPage: page}">
+        <div class="w-100 d-flex border-bottom bg-white py-2">
+            <h6 class="h6 w-25 text-center">{{log.time}}</h6>
+            <h6 class="h6 w-25 text-center">{{log.value}}</h6>
+            <h6 class="h6 w-25 text-center">{{ log.status === true ? 'Aktif' : 'Inaktif' }}</h6>
+            <h6 class="h6 w-25 text-center">{{log.time}}</h6>
+        </div>
+    </div>
+
+    
+    <div class="d-flex w-100 justify-content-center mt-4">
+        <pagination-controls (pageChange)="page = $event"></pagination-controls>
+    </div>
+
+    <div class="w-100 mt-2">
+        <div class="w-50 d-flex mx-4 px-4">
+            <a [ngClass]="type === 'suhu' ? 'active' : 'normal'" class="w-25" (click)="updateType(1)">Suhu</a>
+            <a [ngClass]="type === 'ph' ? 'active' : 'normal'" class="w-25" (click)="updateType(2)">pH</a>
+            <a [ngClass]="type === 'salinitas' ? 'active' : 'normal'" class="w-25" (click)="updateType(3)">Salinitas</a>
+            <a [ngClass]="type === 'kekeruhan' ? 'active' : 'normal'" class="w-25" (click)="updateType(4)">Kekeruhan</a>
+        </div>
+    </div>
+</div>

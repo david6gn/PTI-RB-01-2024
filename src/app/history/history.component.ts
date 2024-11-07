@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { HistoryData, HistoryItem, HistoryResponse, LogItem } from '../../models/history-response';
+import { HistoryItem, HistoryResponse } from '../../models/history-response';
 import { CommonModule } from '@angular/common';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiService } from '../../service/api.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-history',
@@ -17,14 +17,19 @@ export class HistoryComponent implements OnInit {
   limit: number = 6;
   historyData: HistoryItem[] = [];
   
-  constructor(private snackBar: MatSnackBar, private apiService: ApiService){}
+  constructor(
+    private apiService: ApiService,
+    private router: Router,
+    private route: ActivatedRoute
+  ){}
 
   ngOnInit(): void {
     this.getHistoryList()
   }
 
   navigateToDetailHistory(history: HistoryItem) {
-    this.snackBar.open(history['date:'], undefined, {duration: 1000});
+    const date = history['date:']
+    this.router.navigate(['detail'], { state: { history: history },queryParams: { date }, relativeTo: this.route });
   }
 
   getHistoryList() {
@@ -34,7 +39,6 @@ export class HistoryComponent implements OnInit {
     this.apiService.getHistoryList(queryParams).subscribe({
       next: (response: HistoryResponse) => {
         this.historyData = response.data.histories;
-        console.log(response)
       },
       error: (error) => {
         console.log(error)

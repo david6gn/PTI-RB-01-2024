@@ -9,6 +9,7 @@ import { NotificationComponent } from './notification/notification.component';
 import { SensorDataComponent } from './sensor-data/sensor-data.component';
 import { SensorInfoComponent } from './sensor-info/sensor-info.component';
 import { AuthGuard } from './auth.guard'; 
+import { HistoryDetailComponent } from './history-detail/history-detail.component';
 
 
 export const routes: Routes = [
@@ -53,7 +54,12 @@ export const routes: Routes = [
             {
                 path: 'riwayat',
                 component: HistoryComponent,
-                title: 'Riwayat'
+                title: 'Riwayat',
+            },
+            {
+                path: 'riwayat/detail',
+                component: HistoryDetailComponent,
+                title: 'detail riwayat'
             },
             {
                 path: 'notifikasi',

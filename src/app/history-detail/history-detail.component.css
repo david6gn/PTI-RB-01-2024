@@ -1,0 +1,28 @@
+.card-item {
+    width: 100%;
+    background-color: rgba(217, 220, 214, 0.5);
+}
+
+.fill {
+    background-color: #16425B;
+}
+
+.active {
+    border-radius: 0;
+    background-color: #16425B;
+    text-decoration: none;
+    color: white;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: center;
+}
+
+.normal {
+    border-radius: 0;
+    background-color: white;
+    text-decoration: none;
+    color: black;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: center;
+}
