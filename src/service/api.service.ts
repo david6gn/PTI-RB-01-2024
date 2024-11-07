@@ -7,6 +7,8 @@ import { PostResponse } from '../models/post-response';
 import { SensorResponse } from '../models/sensor-response';
 import { ToolsResponse } from '../models/tools-response';
 import { HistoryResponse } from '../models/history-response';
+import { NotificationResponse } from '../models/notification-response';
+import { NotificationDetailResponse } from '../models/notification-detail-response';
 
 
 @Injectable({
@@ -146,5 +148,13 @@ export class ApiService {
     const urlWithQuery = `${this.baseURL}histories?${queryParamsString}`;
 
     return this.http.get<HistoryResponse>(urlWithQuery);
+  }
+
+  getNotificationList(): Observable<NotificationResponse> {
+    return this.http.get<NotificationResponse>(`${this.baseURL}notifications`);
+  }
+
+  getNotificationDetail(id: string): Observable<NotificationDetailResponse> {
+    return this.http.get<NotificationDetailResponse>(`${this.baseURL}notifications/${id}`)
   }
 }
