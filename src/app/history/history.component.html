@@ -1,1 +1,23 @@
-<p>history works!</p>
+<div class="w-100 card-item mt-3 rounded d-flex px-4 py-3 align-items-center flex-column">
+    <div class="d-flex w-100">
+        <h3 class="h3">Riwayat</h3>
+    </div>
+
+    <div class="d-flex w-100 mt-4" *ngFor="let history of historyData | paginate: {itemsPerPage: limit, currentPage: page}">
+        <div class="w-100 d-flex align-items-center border-bottom">
+            <div class="w-50 d-flex flex-column">
+                <h6 class="h6">Data kondisi tambak {{ history['date:'] | date: 'dd MMMM yyyy' }}</h6>
+            </div>
+            <div class="d-flex flex-fill justify-content-center">
+                <h6 class="h6">{{ history['date:'] | date: 'dd/MM/yyyy' }}</h6>
+            </div>
+            <div class="w-25 d-flex justify-content-end mb-2">
+                <button class="btn border-black px-4" (click)="navigateToDetailHistory(history)">Lihat detail</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex w-100 justify-content-center mt-4">
+        <pagination-controls (pageChange)="page = $event"></pagination-controls>
+    </div>
+</div>

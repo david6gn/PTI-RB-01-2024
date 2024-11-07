@@ -6,6 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { PostResponse } from '../../models/post-response';
 import { AuthService } from '../../service/auth.service';
 import { Messaging, deleteToken } from '@angular/fire/messaging';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-home',
@@ -33,7 +34,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.updateLocalDateTime()
-    this.navigateToTools()
+    this.navigateToMonitoring()
     this.intervalId = setInterval(() => this.updateLocalDateTime(), 1000); 
   }
 

@@ -6,6 +6,7 @@ import { LoginResponse } from '../models/login-response';
 import { PostResponse } from '../models/post-response';
 import { SensorResponse } from '../models/sensor-response';
 import { ToolsResponse } from '../models/tools-response';
+import { HistoryResponse } from '../models/history-response';
 
 
 @Injectable({
@@ -137,7 +138,13 @@ export class ApiService {
         body.set(key, data[key]);
       }
     }
-
     return this.http.put<PostResponse>(`${this.baseURL}configuration/aerator/schedule`, body, {headers});
+  }
+
+  getHistoryList(queryParams: any): Observable<HistoryResponse> {
+    const queryParamsString = new URLSearchParams(queryParams).toString();
+    const urlWithQuery = `${this.baseURL}histories?${queryParamsString}`;
+
+    return this.http.get<HistoryResponse>(urlWithQuery);
   }
 }
