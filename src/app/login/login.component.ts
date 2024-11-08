@@ -3,13 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ApiService } from '../../service/api.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { LoginResponse } from '../../models/login-response';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ChangePasswordDialogComponent } from '../change-password-dialog/change-password-dialog.component';
 import { getToken, Messaging } from '@angular/fire/messaging';
 import { environment } from '../../environments/environment';
 import { AuthService } from '../../service/auth.service';
+import { SnackbarService } from '../../service/snackbar.service';
 
 @Component({
   selector: 'app-login',
@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private router: Router, 
     private apiService: ApiService, 
-    private snackBar: MatSnackBar, 
+    private snackBar: SnackbarService, 
     private dialog: MatDialog, 
     private authService: AuthService,
     messaging: Messaging
@@ -47,7 +47,7 @@ export class LoginComponent implements OnInit {
     Notification.requestPermission().then((permission) => {
       if (permission === 'granted') {
       } else {
-        this.snackBar.open("Notifikasi website tidak dapat ditampilkan, mohon izinkan notifikasi untuk mendapatkan notifikasi website", undefined, { duration: 2000 });
+        this.snackBar.showSnackBar("Notifikasi website tidak dapat ditampilkan, mohon izinkan notifikasi untuk mendapatkan notifikasi website");
       }
     });
   }
@@ -77,7 +77,7 @@ export class LoginComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(message => {
       if(message !== null) {
-        this.snackBar.open(message, undefined, { duration: 2000 });
+        this.snackBar.showSnackBar(message);
       } 
     });
   }
@@ -133,15 +133,14 @@ export class LoginComponent implements OnInit {
     }
     this.apiService.login(data).subscribe({
       next: (response: LoginResponse) => {
+        console.log(response)
         this.authService.login(response.token, response.user_id);
-        this.snackBar.open(response.message, undefined, { duration: 2000 });
+        this.snackBar.showSnackBar(response.message);
         this.router.navigate(['/dashboard']);
       },
       error: (error) => {
-        console.log(error);
+        this.snackBar.showSnackBar(error.error.message);
       }
     });
   }
-
-
 }

@@ -4,6 +4,7 @@ import { NotificationItem, NotificationResponse } from '../../models/notificatio
 import { NgxPaginationModule } from 'ngx-pagination';
 import { CommonModule } from '@angular/common';
 import { NotificationDetail, NotificationDetailResponse } from '../../models/notification-detail-response';
+import { SnackbarService } from '../../service/snackbar.service';
 
 @Component({
   selector: 'app-notification',
@@ -27,7 +28,7 @@ export class NotificationComponent implements OnInit {
     body: ''
   };
 
-  constructor(private apiService: ApiService){}
+  constructor(private apiService: ApiService, private snackBar: SnackbarService){}
 
   ngOnInit(): void {
     this.apiService.getNotificationList().subscribe({
@@ -36,7 +37,7 @@ export class NotificationComponent implements OnInit {
         this.notificationList = response.data.notifications.reverse();
       },
       error: (error) => {
-        console.log(error)
+        this.snackBar.showSnackBar(error.error.message);
       }
     })
   }
@@ -65,7 +66,7 @@ export class NotificationComponent implements OnInit {
         this.notificationDetail = response.data;
       },
       error: (error) => {
-        console.log(error)
+        this.snackBar.showSnackBar(error.error.message);
       }
     })
   }

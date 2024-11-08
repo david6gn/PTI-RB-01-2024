@@ -9,6 +9,7 @@ import { Messaging, deleteToken } from '@angular/fire/messaging';
 import { CommonModule } from '@angular/common';
 import { UserItem } from '../../models/user-response';
 import { UserDetailResponse } from '../../models/user-detail-response';
+import { SnackbarService } from '../../service/snackbar.service';
 
 @Component({
   selector: 'app-home',
@@ -26,22 +27,31 @@ export class HomeComponent implements OnInit, OnDestroy {
   type: string = '';
   gif: string [] = ["https://media.tenor.com/uwFCK7sFjYUAAAAd/wow-amazing.gif", "gif.gif"];
   imageuser: string = this.gif[Math.floor(Math.random() * this.gif.length)];
+  isAdmin: boolean
 
   constructor(
     private router: Router, 
     private route: ActivatedRoute, 
     private apiService: ApiService,
     private authService: AuthService, 
-    private snackBar: MatSnackBar,
+    private snackBar: SnackbarService,
     messaging: Messaging
   ) {
     this._messaging = messaging
+    // const type = this.authService.getUserType();
+    const type: string = "admin";
+
+    if (type === "admin") {
+      this.isAdmin = true;
+    } else {
+      this.isAdmin = false;
+    }
   }
 
   ngOnInit(): void {
-    this.getUserDetail()
-    this.updateLocalDateTime()
-    this.navigateToNotification()
+    this.getUserDetail();
+    this.updateLocalDateTime();
+    this.navigateToNotification();
     this.intervalId = setInterval(() => this.updateLocalDateTime(), 1000); 
   }
 
@@ -131,7 +141,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.apiService.logout().subscribe({
       next: (response: PostResponse) => {
         this.authService.logout();
-        this.snackBar.open(response.message, undefined, { duration: 2000 });
+        this.snackBar.showSnackBar(response.message);
         this.router.navigate(['/']);;
       },
       error: (error) => {
@@ -146,9 +156,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     const container = document.querySelector('.container-main') as HTMLElement;
     
     if (stickyHeader) {
-      const headerRect = container.getBoundingClientRect();
+      const containerRect = container.getBoundingClientRect();
+      const stickyRect = stickyHeader.getBoundingClientRect();
+
       
-      if (headerRect.top <= 0) {
+      if (containerRect.top <= stickyRect.bottom) {
         stickyHeader.classList.add('scrolled');
       } else {
         stickyHeader.classList.remove('scrolled');

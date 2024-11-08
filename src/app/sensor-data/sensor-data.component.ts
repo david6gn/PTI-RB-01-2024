@@ -10,6 +10,7 @@ import { ApiService } from '../../service/api.service';
 import { SensorResponse } from '../../models/sensor-response';
 import { PostResponse } from '../../models/post-response';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackbarService } from '../../service/snackbar.service';
 
 @Component({
   selector: 'app-sensor-data',
@@ -37,7 +38,7 @@ export class SensorDataComponent implements OnInit, OnDestroy {
     private chartService: ChartService, 
     private socketService: SocketService,
     private apiService: ApiService,
-    private snackBar: MatSnackBar
+    private snackBar: SnackbarService
   ) {}
 
   ngOnInit(): void {
@@ -213,7 +214,11 @@ export class SensorDataComponent implements OnInit, OnDestroy {
         }
       },
       error: (error) => {
-        console.log(error)
+        if(error.status === 403) {
+          this.snackBar.showSnackBar("Hanya admin yang dapat menghidupkan sensor!");
+        } else {
+          this.snackBar.showSnackBar(error.error.message);
+        }
       }
     })
   }
@@ -226,18 +231,22 @@ export class SensorDataComponent implements OnInit, OnDestroy {
         }
       },
       error: (error) => {
-        console.log(error)
+        if(error.status === 403) {
+          this.snackBar.showSnackBar("Hanya admin yang dapat mematikan sensor!");
+        } else {
+          this.snackBar.showSnackBar(error.error.message);
+        }
       }
     })
   }
 
   updateSensorSetting(): void {
     if (this.sensorMaxEditable <= this.sensorMinEditable) {
-      this.snackBar.open("Nilai maksmimal tidak boleh lebih rendah dari nilai minimal!", undefined, { duration: 2000 });
+      this.snackBar.showSnackBar("Nilai maksmimal tidak boleh lebih rendah dari nilai minimal!");
       return
     }
     if (this.sensorMinEditable >= this.sensorMaxEditable) {
-      this.snackBar.open("Nilai minimal tidak boleh lebih tinggi dari nilai maksimal!", undefined, { duration: 2000 });
+      this.snackBar.showSnackBar("Nilai minimal tidak boleh lebih tinggi dari nilai maksimal!");
       return
     }
     const data = {
@@ -247,14 +256,18 @@ export class SensorDataComponent implements OnInit, OnDestroy {
     this.apiService.updateSensorSetting(data, this.sensorId).subscribe({
       next: (response: PostResponse) => {
         if(!response.error) {
-          this.snackBar.open(response.message, undefined, { duration: 2000 });
+          this.snackBar.showSnackBar(response.message);
           this.getSensorData();
         } else {
           console.log(response.message)
         }
       },
       error: (error) => {
-        console.log(error);
+        if(error.status === 403) {
+          this.snackBar.showSnackBar("Hanya admin yang dapat mengubah interval sensor!");
+        } else {
+          this.snackBar.showSnackBar(error.error.message);
+        }
       }
     });
   }

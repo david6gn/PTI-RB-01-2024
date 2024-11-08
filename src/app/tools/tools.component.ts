@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms'; 
 import { ApiService } from '../../service/api.service';
 import { ToolsResponse } from '../../models/tools-response';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { PostResponse } from '../../models/post-response';
-import { error } from 'highcharts';
+import { SnackbarService } from '../../service/snackbar.service';
 
 @Component({
   selector: 'app-tools',
@@ -18,7 +17,7 @@ export class ToolsComponent implements OnInit {
   feedAmount: number[] = [0, 0, 0, 0];
   aeratorTime: number[] = [0, 0];
   
-  constructor(private apiService: ApiService, private snackBar: MatSnackBar) {}
+  constructor(private apiService: ApiService, private snackBar: SnackbarService) {}
 
   ngOnInit(): void {
     this.apiService.getToolsData().subscribe({
@@ -59,7 +58,11 @@ export class ToolsComponent implements OnInit {
 
       },
       error: (error) => {
-        console.log(error)
+        if(error.status === 403) {
+          this.snackBar.showSnackBar("Hanya admin yang dapat mengubah kontrol pakan!");
+        } else {
+          this.snackBar.showSnackBar(error.error.message);
+        }
       }
     })
   }
@@ -74,7 +77,11 @@ export class ToolsComponent implements OnInit {
       next: (response: PostResponse) => {
       },
       error: (error) => {
-        console.log(error)
+        if(error.status === 403) {
+          this.snackBar.showSnackBar("Hanya admin yang dapat mengubah kontrol kincir!");
+        } else {
+          this.snackBar.showSnackBar(error.error.message);
+        }
       }
     })
   }

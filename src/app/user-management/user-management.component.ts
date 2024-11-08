@@ -8,6 +8,7 @@ import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation
 import { ActivatedRoute, Router } from '@angular/router';
 import { PostResponse } from '../../models/post-response';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackbarService } from '../../service/snackbar.service';
 
 @Component({
   selector: 'app-user-management',
@@ -29,7 +30,7 @@ export class UserManagementComponent implements OnInit {
     private dialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,
-    private snackBar: MatSnackBar
+    private snackBar: SnackbarService
   ) {}
 
   ngOnInit(): void {
@@ -69,10 +70,10 @@ export class UserManagementComponent implements OnInit {
       next: (response: PostResponse) => {
         console.log(response)
         if(!response.error) {
-          this.snackBar.open(response.message, undefined, {duration: 2000});
+          this.snackBar.showSnackBar(response.message);
           this.getUserList();
         } else {
-          this.snackBar.open(response.message, undefined, {duration: 2000});
+          this.snackBar.showSnackBar(response.message);
         }
       },
       error: (error) => {

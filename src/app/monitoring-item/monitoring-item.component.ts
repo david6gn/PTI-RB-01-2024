@@ -9,6 +9,7 @@ import { ChartService } from '../../service/chart.service';
 import { ApiService } from '../../service/api.service';
 import { SensorResponse } from '../../models/sensor-response';
 import { PostResponse } from '../../models/post-response';
+import { SnackbarService } from '../../service/snackbar.service';
 
 @Component({
   selector: 'app-monitoring-item',
@@ -24,7 +25,8 @@ export class MonitoringItemComponent implements AfterViewInit{
     private router: Router, 
     private route: ActivatedRoute,  
     private chartService: ChartService, 
-    private apiService: ApiService
+    private apiService: ApiService,
+    private snackBar: SnackbarService
   ) {}
 
   @Input() monitoringItem!:Monitoringitem;
@@ -64,7 +66,11 @@ export class MonitoringItemComponent implements AfterViewInit{
         }
       },
       error: (error) => {
-        console.log(error)
+        if(error.status === 403) {
+          this.snackBar.showSnackBar("Hanya admin yang dapat menghidupkan sensor!");
+        } else {
+          this.snackBar.showSnackBar(error.error.message);
+        }
       }
     })
   }
@@ -77,7 +83,11 @@ export class MonitoringItemComponent implements AfterViewInit{
         }
       },
       error: (error) => {
-        console.log(error)
+        if(error.status === 403) {
+          this.snackBar.showSnackBar("Hanya admin yang dapat mematikan sensor!");
+        } else {
+          this.snackBar.showSnackBar(error.error.message);
+        }
       }
     })
   }
