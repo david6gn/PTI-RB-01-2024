@@ -10,6 +10,7 @@ import { getToken, Messaging } from '@angular/fire/messaging';
 import { environment } from '../../environments/environment';
 import { AuthService } from '../../service/auth.service';
 import { SnackbarService } from '../../service/snackbar.service';
+import { LoadingService } from '../../service/loading.service';
 
 @Component({
   selector: 'app-login',
@@ -34,7 +35,8 @@ export class LoginComponent implements OnInit {
     private snackBar: SnackbarService, 
     private dialog: MatDialog, 
     private authService: AuthService,
-    messaging: Messaging
+    messaging: Messaging,
+    private loading: LoadingService
   ) {
     this._messaging = messaging;
   }
@@ -91,6 +93,7 @@ export class LoginComponent implements OnInit {
         this.errorText = "Password tidak boleh dibawah 8 karakter!";
         this.isErrorVisible = true;
       }  else {
+        this.loading.showLoading()
         this._getDeviceToken()
         this.isErrorVisible = false;
       }
@@ -134,11 +137,14 @@ export class LoginComponent implements OnInit {
     this.apiService.login(data).subscribe({
       next: (response: LoginResponse) => {
         console.log(response)
-        this.authService.login(response.token, response.user_id);
-        this.snackBar.showSnackBar(response.message);
-        this.router.navigate(['/dashboard']);
+        this.loading.hideLoading(() => {
+          this.authService.login(response.token, response.userId, response.type);
+          this.snackBar.showSnackBar(response.message);
+          this.router.navigate(['/dashboard']);
+        });
       },
       error: (error) => {
+        this.loading.hideLoading()
         this.snackBar.showSnackBar(error.error.message);
       }
     });

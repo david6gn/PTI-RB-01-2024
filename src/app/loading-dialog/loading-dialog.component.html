@@ -1,0 +1,14 @@
+<div class="my-4 px-4 w-100 d-flex flex-column align-items-center">
+<div mat-dialog-content class="text-center">
+    <ng-container *ngIf="isLoading; else successTemplate">
+        <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+    </ng-container>
+    <ng-template #successTemplate>
+        <ng-lottie 
+        [options]="options" 
+        class="lottie-animation"
+        (animationCreated)="animationCreated($event)"
+        ></ng-lottie>
+    </ng-template>
+    </div>
+</div>

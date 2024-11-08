@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { UserItem } from '../../models/user-response';
 import { UserDetailResponse } from '../../models/user-detail-response';
 import { SnackbarService } from '../../service/snackbar.service';
+import { LoadingService } from '../../service/loading.service';
 
 @Component({
   selector: 'app-home',
@@ -35,11 +36,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     private apiService: ApiService,
     private authService: AuthService, 
     private snackBar: SnackbarService,
-    messaging: Messaging
+    messaging: Messaging,
+    private loading: LoadingService
   ) {
     this._messaging = messaging
-    // const type = this.authService.getUserType();
-    const type: string = "admin";
+    const type = this.authService.getUserType();
 
     if (type === "admin") {
       this.isAdmin = true;
@@ -51,7 +52,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getUserDetail();
     this.updateLocalDateTime();
-    this.navigateToNotification();
+    this.navigateToMonitoring();
     this.intervalId = setInterval(() => this.updateLocalDateTime(), 1000); 
   }
 
@@ -80,7 +81,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   navigateToUserManagement() {
-    this.router.navigate(['managemen'], {relativeTo: this.route});
+    this.router.navigate(['manajemen'], {relativeTo: this.route});
   }
 
   updateLocalDateTime() {
@@ -114,6 +115,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   async deleteDeviceToken(): Promise<void> {
+    this.loading.showLoading()
     return deleteToken(this._messaging)
       .then(() => {
         this.logoutUser()
@@ -140,9 +142,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   logoutUser() {
     this.apiService.logout().subscribe({
       next: (response: PostResponse) => {
-        this.authService.logout();
-        this.snackBar.showSnackBar(response.message);
-        this.router.navigate(['/']);;
+        this.loading.hideLoading(() => {
+          this.authService.logout();
+          this.snackBar.showSnackBar(response.message);
+          this.router.navigate(['/']);;
+        });
       },
       error: (error) => {
         console.log(error);

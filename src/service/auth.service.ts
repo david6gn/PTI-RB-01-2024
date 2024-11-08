@@ -12,10 +12,11 @@ export class AuthService {
     return session !== null && session !== '';
   }
 
-  login(token: string, userId: string) {
+  login(token: string, userId: string, userType: string) {
     localStorage.setItem('session', 'logged');
     localStorage.setItem('token', token);
-    localStorage.setItem('userId', userId)
+    localStorage.setItem('userId', userId);
+    localStorage.setItem('userType', userType);
   }
 
   getToken(): string {
@@ -31,7 +32,6 @@ export class AuthService {
   }
 
   logout() {
-    localStorage.removeItem('session');
-    localStorage.removeItem('token');
+    localStorage.clear();
   }
 }

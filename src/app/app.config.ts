@@ -7,6 +7,8 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getMessaging, provideMessaging } from '@angular/fire/messaging';
 import { environment } from '../environments/environment';
+import { LottieComponent, provideLottieOptions } from 'ngx-lottie';
+import player from 'lottie-web';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,6 +16,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withComponentInputBinding()), 
     provideHttpClient(withInterceptorsFromDi()),
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true},
-    provideAnimationsAsync(), provideFirebaseApp(() => initializeApp(environment.firebase)), provideMessaging(() => getMessaging())
+    provideAnimationsAsync(), provideFirebaseApp(() => initializeApp(environment.firebase)), provideMessaging(() => getMessaging()),
+    provideLottieOptions({player: () => player})
   ]
 };

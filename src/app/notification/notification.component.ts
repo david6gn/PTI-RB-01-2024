@@ -33,7 +33,6 @@ export class NotificationComponent implements OnInit {
   ngOnInit(): void {
     this.apiService.getNotificationList().subscribe({
       next: (response: NotificationResponse) => {
-        console.log(response);
         this.notificationList = response.data.notifications.reverse();
       },
       error: (error) => {

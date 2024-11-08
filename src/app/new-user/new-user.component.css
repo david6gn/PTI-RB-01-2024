@@ -3,17 +3,24 @@
     background-color: rgba(217, 220, 214, 0.5);
 }
 
-
 .form-control:focus {
     outline: none;
     box-shadow: none;
     color: black;
+    border: none;
 }
 
 .form-control {
     outline: none;
     box-shadow: none;
     color: black;
+    border: none;
+}
+
+.form-select {
+    outline: none;
+    box-shadow: none;
+    border: none;
 }
 
 .form-select:focus {
@@ -27,4 +34,8 @@
     box-shadow: none;
     border: none;
     background-color: white;
+}
+
+.form-select option:disabled {
+    color: #6c757d;
 }

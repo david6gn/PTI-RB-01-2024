@@ -9,6 +9,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PostResponse } from '../../models/post-response';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackbarService } from '../../service/snackbar.service';
+import { LoadingService } from '../../service/loading.service';
 
 @Component({
   selector: 'app-user-management',
@@ -30,7 +31,8 @@ export class UserManagementComponent implements OnInit {
     private dialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,
-    private snackBar: SnackbarService
+    private snackBar: SnackbarService,
+    private loading: LoadingService
   ) {}
 
   ngOnInit(): void {
@@ -66,6 +68,7 @@ export class UserManagementComponent implements OnInit {
   }
 
   deleteUser(userId: string) {
+    this.loading.showLoading()
     this.apiService.deleteUser(userId).subscribe({
       next: (response: PostResponse) => {
         console.log(response)
@@ -84,5 +87,9 @@ export class UserManagementComponent implements OnInit {
 
   navigateToAddUser() {
     this.router.navigate(['tambah'], {relativeTo: this.route});
+  }
+
+  navigateToEditUser(userId: string) {
+    this.router.navigate(['ubah'], {relativeTo: this.route, queryParams: {userId}});
   }
 }

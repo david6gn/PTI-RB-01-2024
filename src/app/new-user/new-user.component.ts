@@ -6,6 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiService } from '../../service/api.service';
 import { NewUserResponse } from '../../models/new-user-response';
 import { PostResponse } from '../../models/post-response';
+import { SnackbarService } from '../../service/snackbar.service';
 
 @Component({
   selector: 'app-new-user',
@@ -26,7 +27,7 @@ export class NewUserComponent {
   isPasswordVisible: boolean[] = [false, false];
   newUserResponse: NewUserResponse | undefined;
 
-  constructor(private snackBar: MatSnackBar, private apiService: ApiService, private location: Location){}
+  constructor(private snackBar: SnackbarService, private apiService: ApiService, private location: Location){}
 
   togglePasswordVisibility(num: number) {
     this.isPasswordVisible[num] = !this.isPasswordVisible[num]
@@ -37,10 +38,10 @@ export class NewUserComponent {
       if(this.checkPassword()) {
         this.addNewUser();
       } else {
-        this.showSnackBar("Konfirmasi password tidak sesuai!");
+        this.snackBar.showSnackBar("Konfirmasi password tidak sesuai!");
       }
     } else {
-      this.showSnackBar("Lengkapi input terlebih dahulu!");
+      this.snackBar.showSnackBar("Lengkapi input terlebih dahulu!");
     }
   }
 
@@ -73,9 +74,9 @@ export class NewUserComponent {
         if(!response.error) {
           this.newUserResponse = response;
           this.isOTPsent = true;
-          this.showSnackBar(response.message);
+          this.snackBar.showSnackBar(response.message);
         } else {
-          this.showSnackBar(response.message);
+          this.snackBar.showSnackBar(response.message);
         }
       },
       error: (error) => {
@@ -86,11 +87,11 @@ export class NewUserComponent {
 
   verifyOTP(): void {
     if (this.newUserResponse === undefined) {
-      this.showSnackBar("Lakukan registerasi akun terlebih dahulu!");
+      this.snackBar.showSnackBar("Lakukan registerasi akun terlebih dahulu!");
       return;
     }
     if (this.ngOtpInput.currentVal.length !== 4) {
-      this.showSnackBar("Lengkapi kode OTP terlebih dahulu!");
+      this.snackBar.showSnackBar("Lengkapi kode OTP terlebih dahulu!");
       return;
     }
 
@@ -102,23 +103,16 @@ export class NewUserComponent {
       next: (response: PostResponse) => {
         console.log(response)
         if (!response.error) {
-          this.showSnackBar(response.message);
-          this.showSnackBar("Akun berhasil dibuat!");
+          this.snackBar.showSnackBar(response.message);
+          this.snackBar.showSnackBar("Akun berhasil dibuat!");
           this.location.back()
         } else {
-          this.showSnackBar(response.message);
+          this.snackBar.showSnackBar(response.message);
         }
       },
       error: (error) => {
         console.log(error)
       }
     })
-  }
-
-
-
-  
-  showSnackBar(message: string) {
-    this.snackBar.open(message, undefined, { duration: 2000 });
   }
 }

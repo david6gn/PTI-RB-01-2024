@@ -17,13 +17,12 @@ export class AppComponent implements OnInit, OnDestroy {
   title = 'pti-sadewafarm';
 
   private readonly _messaging: Messaging
-  constructor(messaging: Messaging, private snackBar: SnackbarService, private socketService: SocketService){
+  constructor(messaging: Messaging, private snackBar: SnackbarService){
     this._messaging = messaging
   }
 
   ngOnInit(): void {
     this._onMessage();
-    this.socketService.connectToWebSocket()
   }
 
   private _onMessage(): void {
@@ -37,6 +36,5 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.socketService.closeConnection()
   }
 }

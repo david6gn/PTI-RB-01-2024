@@ -13,7 +13,6 @@ import { HistoryDetailComponent } from './history-detail/history-detail.componen
 import { UserManagementComponent } from './user-management/user-management.component';
 import { NewUserComponent } from './new-user/new-user.component';
 
-
 export const routes: Routes = [
     {
         path: '',
@@ -69,15 +68,15 @@ export const routes: Routes = [
                 title: 'Notifikasi'
             },
             {
-                path: 'managemen',
+                path: 'manajemen',
                 component: UserManagementComponent,
-                title: 'Managemen User'
+                title: 'Manajemen User'
             },
             {
-                path: 'managemen/tambah',
+                path: 'manajemen/tambah',
                 component: NewUserComponent,
                 title: 'Tambah User'
-            },
+            }
         ]
     },
     {
