@@ -1,53 +1,61 @@
-<div class="w-100 card-item mt-3 rounded d-flex px-4 py-3 align-items-center flex-column">
-    <div class="w-100 mb-2">
-        <h3 class="h3">Notifikasi</h3>
-    </div>
-
-    <div class="d-flex w-100 d-flex mt-4">
-        <div class="w-50 border-end">
-            <div class="d-flex w-100 flex-column" *ngFor="let notification of notificationList | paginate: {itemsPerPage: limit, currentPage: page}">
-                <div class="w-100 d-flex flex-column border-bottom ps-4 mt-2" (click)="getNotificationDetail(notification.id)">
-                    <h5 class="h5 text-white">{{ notification.title }}</h5>
-                    <h6 class="h6 text-muted">{{ getRelativeTime(notification.timestamp) }}</h6>
-                </div>
-            </div>
-            <div class="d-flex w-100 mt-4">
-                <pagination-controls (pageChange)="page = $event"></pagination-controls>
-            </div>
+<div class="h-100 w-100 d-flex pb-3">
+    <div class="w-100 card-item rounded d-flex px-4 py-3 align-items-center flex-column">
+        <div class="w-100 mb-2">
+            <h3 class="h3">Notifikasi</h3>
         </div>
-
-        <div class="w-50 d-flex flex-column">
-            <div class="w-100 border-bottom ps-4">
-                <h3 class="h3">Detail Notifikasi</h3>
-            </div>
-            <div *ngIf="notificationDetail.id !== ''">
-                <div class="w-100 ps-4">
-                    <div class="w-100 d-flex align-items-center mt-2">
-                        <i [ngClass]="{
-                            'text-success': status === 'low',
-                            'text-warning': status === 'medium',
-                            'text-danger': status === 'high'
-                          }" class="bi bi-info-circle fs-3">
-                        </i>
-                        <div class="d-flex flex-column justify-content-center ms-4">
-                            <h5 class="h5 g-0 m-0" [ngClass]="{
-                                'text-success': status === 'low',
-                                'text-warning': status === 'medium',
-                                'text-danger': status === 'high'}">{{ notificationDetail.title }}</h5>
-                            <p class="g-0 m-0" [ngClass]="{
-                                'text-success': status === 'low',
-                                'text-warning': status === 'medium',
-                                'text-danger': status === 'high'}">{{ getRelativeTime(notificationDetail.timestamp) }}</p>
-                        </div>
+    
+        <div class="d-flex w-100 d-flex mt-4" *ngIf="notificationList.length > 0; else noNotifications">
+            <div class="w-50 border-end">
+                <div class="d-flex w-100 flex-column" *ngFor="let notification of notificationList | paginate: {itemsPerPage: limit, currentPage: page}">
+                    <div class="w-100 d-flex flex-column border-bottom ps-4 mt-2" (click)="getNotificationDetail(notification.id)">
+                        <h5 class="h5 text-white">{{ notification.title }}</h5>
+                        <h6 class="h6 text-muted">{{ getRelativeTime(notification.timestamp) }}</h6>
                     </div>
                 </div>
-                <div class="w-100 ps-4 mt-4">
-                    <p>{{ notificationDetail.body }}</p>
+                <div class="d-flex w-100 mt-4">
+                    <pagination-controls (pageChange)="page = $event"></pagination-controls>
                 </div>
             </div>
-            <div *ngIf="notificationDetail.id === ''" class="w-100 h-100 d-flex flex-column align-items-center justify-content-center">
-                <h5 class="h5 text-muted">Pilih notifikasi terlebih dahulu</h5>
+    
+            <div class="w-50 d-flex flex-column">
+                <div class="w-100 border-bottom ps-4">
+                    <h3 class="h3">Detail Notifikasi</h3>
+                </div>
+                <div *ngIf="notificationDetail.id !== ''">
+                    <div class="w-100 ps-4">
+                        <div class="w-100 d-flex align-items-center mt-2">
+                            <i [ngClass]="{
+                                'text-success': status === 'low',
+                                'text-warning': status === 'medium',
+                                'text-danger': status === 'high'
+                              }" class="bi bi-info-circle fs-3">
+                            </i>
+                            <div class="d-flex flex-column justify-content-center ms-4">
+                                <h5 class="h5 g-0 m-0" [ngClass]="{
+                                    'text-success': status === 'low',
+                                    'text-warning': status === 'medium',
+                                    'text-danger': status === 'high'}">{{ notificationDetail.title }}</h5>
+                                <p class="g-0 m-0" [ngClass]="{
+                                    'text-success': status === 'low',
+                                    'text-warning': status === 'medium',
+                                    'text-danger': status === 'high'}">{{ getRelativeTime(notificationDetail.timestamp) }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-100 ps-4 mt-4">
+                        <p>{{ notificationDetail.body }}</p>
+                    </div>
+                </div>
+                <div *ngIf="notificationDetail.id === ''" class="w-100 h-100 d-flex flex-column align-items-center justify-content-center">
+                    <h5 class="h5 text-muted">Pilih notifikasi terlebih dahulu</h5>
+                </div>
             </div>
         </div>
+    
+        <ng-template #noNotifications>
+            <div class="w-100 flex-grow-1 d-flex flex-column align-items-center justify-content-center">
+                <h5 class="h5 text-muted">Tidak ada notifikasi saat ini</h5>
+            </div>
+        </ng-template>
     </div>
 </div>

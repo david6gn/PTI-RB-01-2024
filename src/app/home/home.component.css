@@ -9,8 +9,22 @@
     z-index: 1000;
 }
 
+.sticky-item-top {
+    position: sticky;
+    align-items: start;
+    top: 0;
+    z-index: 1000;
+    background-color: transparent;
+    transition: background-color 0.3s ease;
+}
+
+.sticky-item-top.scrolled {
+    z-index: 1000;
+    background-color: #4c83a3;
+}
+
 .fill-primary {
-    background: #16425B; 
+    background: #448cb6; 
 }
 
 .bg-image {
@@ -18,4 +32,11 @@
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
+}
+
+
+.container-grid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    height: 100vh;
 }

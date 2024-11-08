@@ -1,18 +1,18 @@
+.section {
+    width: 100%;
+}
+
 .list-monitoring {
     display: flex;
     flex-wrap: wrap;
+    gap: 5px; 
     justify-content: space-between;
 }
 
 app-monitoring-item {
-    flex: 0 0 calc(50% - 10px);
-    height: 50%;
+    flex: 1 1 calc(50% - 10px);
+    max-width: calc(50% - 10px);
+    height: auto;
     margin-bottom: 20px;
-}
-
-.bg-image {
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+    box-sizing: border-box;
 }

@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgOtpInputModule } from 'ng-otp-input';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -22,10 +22,11 @@ export class NewUserComponent {
   role: string = '';
   password: string = '';
   passwordConfirmation: string = '';
+  isOTPsent: boolean = false;
   isPasswordVisible: boolean[] = [false, false];
   newUserResponse: NewUserResponse | undefined;
 
-  constructor(private snackBar: MatSnackBar, private apiService: ApiService){}
+  constructor(private snackBar: MatSnackBar, private apiService: ApiService, private location: Location){}
 
   togglePasswordVisibility(num: number) {
     this.isPasswordVisible[num] = !this.isPasswordVisible[num]
@@ -71,7 +72,7 @@ export class NewUserComponent {
       next: (response: NewUserResponse) => {
         if(!response.error) {
           this.newUserResponse = response;
-          console.log(response);
+          this.isOTPsent = true;
           this.showSnackBar(response.message);
         } else {
           this.showSnackBar(response.message);
@@ -103,6 +104,7 @@ export class NewUserComponent {
         if (!response.error) {
           this.showSnackBar(response.message);
           this.showSnackBar("Akun berhasil dibuat!");
+          this.location.back()
         } else {
           this.showSnackBar(response.message);
         }
@@ -112,6 +114,8 @@ export class NewUserComponent {
       }
     })
   }
+
+
 
   
   showSnackBar(message: string) {

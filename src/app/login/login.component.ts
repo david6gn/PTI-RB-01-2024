@@ -133,7 +133,7 @@ export class LoginComponent implements OnInit {
     }
     this.apiService.login(data).subscribe({
       next: (response: LoginResponse) => {
-        this.authService.login(response.token);
+        this.authService.login(response.token, response.user_id);
         this.snackBar.open(response.message, undefined, { duration: 2000 });
         this.router.navigate(['/dashboard']);
       },

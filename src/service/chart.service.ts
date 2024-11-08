@@ -23,7 +23,7 @@ export class ChartService {
       this.limit = 20;
       tickAmount = 6;
     } else {
-      height = 155;
+      height = 160;
       this.limit = 10;
       tickAmount = 4;
     }

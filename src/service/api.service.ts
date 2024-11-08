@@ -9,8 +9,9 @@ import { ToolsResponse } from '../models/tools-response';
 import { HistoryResponse } from '../models/history-response';
 import { NotificationResponse } from '../models/notification-response';
 import { NotificationDetailResponse } from '../models/notification-detail-response';
-import { UserResponse } from '../models/user-response';
+import { UserItem, UserResponse } from '../models/user-response';
 import { NewUserResponse } from '../models/new-user-response';
+import { UserDetailResponse } from '../models/user-detail-response';
 
 
 @Injectable({
@@ -162,6 +163,10 @@ export class ApiService {
 
   getUserList(): Observable<UserResponse> {
     return this.http.get<UserResponse>(`${this.baseURL}users`);
+  }
+
+  getUserDetail(userId: string): Observable<UserDetailResponse> {
+    return this.http.get<UserDetailResponse>(`${this.baseURL}users/${userId}`);
   }
 
   addNewUser(data: any): Observable<NewUserResponse>{

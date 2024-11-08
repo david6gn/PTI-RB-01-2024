@@ -9,9 +9,9 @@
 }
 
 td, th {
-    font-size: 14px; /* Ukuran font default untuk setiap <td> */
+    font-size: 14px;
     padding: 0px;
-    margin: 0px;/* Padding pada setiap <td> */
-    text-align: center; /* Text align center untuk setiap <td> */
-    border: 1px solid #ddd; /* Border default untuk setiap <td> */
+    margin: 0px;
+    text-align: center;
+    border: 1px solid #ddd;
 }

@@ -1,49 +1,50 @@
-<div class="container-fluid g0 bg-image"  style="background-image: url(background_main.jpg); height: 100vh;">
-    <div class="row h-100">
-        <div class="col-auto fill-side-bar g-0 fill-side-bar">
-            <div class="justify-content-center g-0 sticky-item">
-                <div class="row-auto d-flex flex-column justify-content-center g-0">
-                    <img src="logo_side_bar.png" class="w-50 mx-auto">
-                    <p class="mx-auto" style="font-size: x-large; color: white; text-align: center;"><strong>Sadewa<br>Farm</strong></p>
-                </div>
+<div class="g0 bg-image sticky-item"  style="background-image: url(background_main.jpg); width: 100%; height: 100vh; z-index: -1; position: fixed;"></div>
+
+<div class="container-grid">
+    <div class="g-0 fill-side-bar sticky-item">
+        <div class="justify-content-center g-0 sticky-item">
+            <div class="row-auto d-flex flex-column justify-content-center g-0">
+                <img src="logo_side_bar.png" class="w-50 mx-auto">
+                <p class="mx-auto" style="font-size: x-large; color: white; text-align: center;"><strong>Sadewa<br>Farm</strong></p>
+            </div>
     
-                <div class="row-auto d-flex w-100 flex-column">
-                    <button class="btn-invisible d-flex px-3 py-3" (click)="navigateToMonitoring()">
-                        <i class="bi bi-columns-gap ms-5 me-4"></i><strong>Monitoring</strong>
-                    </button>
-
-                    <button class="btn-invisible d-flex px-3 py-3" (click)="navigateToSensor()">
-                        <i class="bi-soundwave ms-5 me-4"></i><strong>Sensor</strong>
-                    </button>
-
-                    <button class="btn-invisible d-flex px-3 py-3" (click)="navigateToTools()">
-                        <i class="bi-gear-wide-connected ms-5 me-4"></i><strong>Alat</strong>
-                    </button>
-
-                    <button class="btn-invisible d-flex px-3 py-3" (click)="navigateToHistory()">
-                        <i class="bi-clock-history ms-5 me-4"></i><strong>Riwayat</strong>
-                    </button>
-
-                    <button class="btn-invisible d-flex px-3 py-3" (click)="navigateToNotification()">
-                        <i class="bi-bell ms-5 me-4"></i><strong>Notifikasi</strong>
-                    </button>
-
-                    <button class="btn-invisible d-flex px-3 py-3" (click)="navigateToUserManagement()">
-                        <i class="bi-person-check ms-5 me-4"></i><strong>Managemen User</strong>
-                    </button>
-                </div>
-
-                <div class="row-auto mt-4">
-                    <button class="btn-invisible w-100 d-flex px-3 py-3 align-self-baseline" (click)="deleteDeviceToken()">
-                        <i class="bi-box-arrow-left ms-5 me-4"></i> <strong>Keluar</strong>
-                    </button>
-                </div>
+            <div class="row-auto d-flex w-100 flex-column">
+                <button class="btn-invisible d-flex px-3 py-3" (click)="navigateToMonitoring()">
+                    <i class="bi bi-columns-gap ms-5 me-4"></i><strong>Monitoring</strong>
+                </button>
+    
+                <button class="btn-invisible d-flex px-3 py-3" (click)="navigateToSensor()">
+                    <i class="bi-soundwave ms-5 me-4"></i><strong>Sensor</strong>
+                </button>
+    
+                <button class="btn-invisible d-flex px-3 py-3" (click)="navigateToTools()">
+                    <i class="bi-gear-wide-connected ms-5 me-4"></i><strong>Alat</strong>
+                </button>
+    
+                <button class="btn-invisible d-flex px-3 py-3" (click)="navigateToHistory()">
+                    <i class="bi-clock-history ms-5 me-4"></i><strong>Riwayat</strong>
+                </button>
+    
+                <button class="btn-invisible d-flex px-3 py-3" (click)="navigateToNotification()">
+                    <i class="bi-bell ms-5 me-4"></i><strong>Notifikasi</strong>
+                </button>
+    
+                <button class="btn-invisible d-flex px-3 py-3" (click)="navigateToUserManagement()">
+                    <i class="bi-person-check ms-5 me-4"></i><strong>Managemen User</strong>
+                </button>
+            </div>
+    
+            <div class="row-auto mt-4">
+                <button class="btn-invisible w-100 d-flex px-3 py-3 align-self-baseline" (click)="deleteDeviceToken()">
+                    <i class="bi-box-arrow-left ms-5 me-4"></i> <strong>Keluar</strong>
+                </button>
             </div>
         </div>
-
-
-        <div class="col-md d-flex flex-column g-0">
-            <div class="row-auto d-flex sticky-item align-items-center py-3 mx-4 border-bottom">
+    </div>
+    
+    <div class=" d-flex flex-column h-">
+        <div class="d-flex sticky-item-top pt-3 px-3">
+            <div class="d-flex flex-fill border-bottom pb-3">
                 <div class="col d-flex flex-column justify-content-center"> 
                     <h2 class="h2 text-white">{{ time }}</h2>
                     <h6 class="h6 text-white"> {{ date }}</h6>
@@ -52,22 +53,23 @@
                     <div class="col-auto me-3">
                         <div *ngIf="imageuser; else defaultProfile">
                             <img [src]="imageuser" class="rounded-circle" style="width: 70px; height: 70px;">
-                          </div>
-                          <ng-template #defaultProfile>
+                            </div>
+                            <ng-template #defaultProfile>
                             <i class="bi bi-person-circle" style="width: 70px; height: 70px; font-size: 45px; border-radius: 50%; display: inline-block; text-align: center; color: white;"></i>
-                          </ng-template>
+                            </ng-template>
                     </div>
                     <div class="col-auto d-flex flex-column justify-content-center">
-                        <h6 class="h6 text-white fw-bold m-0">{{ username }}</h6>
-                        <p class="fst-italic text-white m-0">Owner</p>
+                        <h6 class="h6 text-white fw-bold m-0">{{ name }}</h6>
+                        <p class="fst-italic text-white m-0">{{ type }}</p>
                     </div>
                 </div>
             </div>
-            <div class="d-flex flex-fill mx-4">
-                <section class="content flex-grow-1">
-                    <router-outlet></router-outlet>
-                </section>
+        </div>
+        <div class="container-main mt-3 mx-3 h-100">
+            <section class="content flex-grow-1 h-100">
+                <router-outlet class="h-100"></router-outlet>
+            </section>
         </div>
     </div>
-    </div>
 </div>
+

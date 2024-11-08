@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, HostListener } from '@angular/core';
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { Router } from '@angular/router';
 import { ApiService } from '../../service/api.service';
@@ -7,6 +7,8 @@ import { PostResponse } from '../../models/post-response';
 import { AuthService } from '../../service/auth.service';
 import { Messaging, deleteToken } from '@angular/fire/messaging';
 import { CommonModule } from '@angular/common';
+import { UserItem } from '../../models/user-response';
+import { UserDetailResponse } from '../../models/user-detail-response';
 
 @Component({
   selector: 'app-home',
@@ -20,6 +22,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   date: string = '';
   private intervalId: any;
   private readonly _messaging: Messaging;
+  name: string = '';
+  type: string = '';
+  gif: string [] = ["https://media.tenor.com/uwFCK7sFjYUAAAAd/wow-amazing.gif", "gif.gif"];
+  imageuser: string = this.gif[Math.floor(Math.random() * this.gif.length)];
 
   constructor(
     private router: Router, 
@@ -33,18 +39,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.getUserDetail()
     this.updateLocalDateTime()
-    this.navigateToUserManagement()
+    this.navigateToNotification()
     this.intervalId = setInterval(() => this.updateLocalDateTime(), 1000); 
   }
 
   ngOnDestroy(): void {
     clearInterval(this.intervalId);
   }
-
-  username: string = "Rizki Esa Fadillah";
-  gif: string [] = ["https://media.tenor.com/uwFCK7sFjYUAAAAd/wow-amazing.gif", "gif.gif"]
-  imageuser: string = this.gif[Math.floor(Math.random() * this.gif.length)];
 
   navigateToMonitoring() {
     this.router.navigate(['monitoring'], {relativeTo: this.route});
@@ -72,9 +75,21 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   updateLocalDateTime() {
     const now = new Date();
+  
     this.date = this.formatDate(now);
-    this.time = now.toLocaleTimeString();
+  
+    const options: Intl.DateTimeFormatOptions = {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+    };
+
+    const time = now.toLocaleTimeString('en-GB', options);
+  
+    this.time = `${time} WIB`
   }
+  
   
   formatDate(date: Date): string {
     const options: Intl.DateTimeFormatOptions = {
@@ -84,10 +99,11 @@ export class HomeComponent implements OnInit, OnDestroy {
       day: '2-digit',
     };
   
-    return date.toLocaleDateString('id-ID', options);
+    const formatter = new Intl.DateTimeFormat('id-ID', options);
+    return formatter.format(date);
   }
 
-  deleteDeviceToken(): Promise<void> {
+  async deleteDeviceToken(): Promise<void> {
     return deleteToken(this._messaging)
       .then(() => {
         this.logoutUser()
@@ -95,6 +111,19 @@ export class HomeComponent implements OnInit, OnDestroy {
       .catch((error) => {
         console.log('Error deleting device token:', error);
       });
+  }
+
+  getUserDetail() {
+    const userId = this.authService.getUserId();
+    this.apiService.getUserDetail(userId).subscribe({
+      next: (response: UserDetailResponse) => {
+        this.name = response.data.name;
+        this.type = response.data.type;
+      },
+      error: (error) => {
+        console.log(error)
+      }
+    })
   }
   
 
@@ -109,5 +138,21 @@ export class HomeComponent implements OnInit, OnDestroy {
         console.log(error);
       }
     });
+  }
+
+  @HostListener('window:scroll', [])
+  onScroll() {
+    const stickyHeader = document.querySelector('.sticky-item-top') as HTMLElement;
+    const container = document.querySelector('.container-main') as HTMLElement;
+    
+    if (stickyHeader) {
+      const headerRect = container.getBoundingClientRect();
+      
+      if (headerRect.top <= 0) {
+        stickyHeader.classList.add('scrolled');
+      } else {
+        stickyHeader.classList.remove('scrolled');
+      }
+    }
   }
 }
