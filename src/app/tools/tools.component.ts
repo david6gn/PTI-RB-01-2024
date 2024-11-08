@@ -4,6 +4,8 @@ import { ApiService } from '../../service/api.service';
 import { ToolsResponse } from '../../models/tools-response';
 import { PostResponse } from '../../models/post-response';
 import { SnackbarService } from '../../service/snackbar.service';
+import { AuthService } from '../../service/auth.service';
+import { LoadingService } from '../../service/loading.service';
 
 @Component({
   selector: 'app-tools',
@@ -17,7 +19,12 @@ export class ToolsComponent implements OnInit {
   feedAmount: number[] = [0, 0, 0, 0];
   aeratorTime: number[] = [0, 0];
   
-  constructor(private apiService: ApiService, private snackBar: SnackbarService) {}
+  constructor(
+    private apiService: ApiService, 
+    private snackBar: SnackbarService,
+    private authService: AuthService,
+    private loading: LoadingService
+  ) {}
 
   ngOnInit(): void {
     this.apiService.getToolsData().subscribe({
@@ -41,7 +48,11 @@ export class ToolsComponent implements OnInit {
     })    
   }
 
-  updateFeederSetting() {
+  updateFeederSetting(): void {
+    if(this.authService.getUserType() !== "admin") {
+      this.snackBar.showSnackBar("Hanya admin yang dapat mengubah interval sensor!");
+      return;
+    }
     const data = {
       schedule_1_amount: this.feedAmount[0],
       schedule_2_amount: this.feedAmount[1],
@@ -52,36 +63,40 @@ export class ToolsComponent implements OnInit {
       schedule_3_time: this.feedTime[2],
       schedule_4_time: this.feedTime[3]
     }
+    this.loading.showLoading();
 
     this.apiService.updateFeederSetting(data).subscribe({
       next: (response: PostResponse) => {
-
+        this.loading.hideLoading(response.error);
       },
       error: (error) => {
-        if(error.status === 403) {
-          this.snackBar.showSnackBar("Hanya admin yang dapat mengubah kontrol pakan!");
-        } else {
+        this.loading.hideLoading(true, () => {
           this.snackBar.showSnackBar(error.error.message);
-        }
+        });
       }
-    })
+    });
   }
 
   updateAeratorSetting() {
+    if(this.authService.getUserType() !== "admin") {
+      this.snackBar.showSnackBar("Hanya admin yang dapat mengubah kontrol kincir!");
+      return;
+    }
     const data = {
       off_minutes_before: this.aeratorTime[0],
       on_minutes_after: this.aeratorTime[1]
     }
 
+    this.loading.showLoading();
+
     this.apiService.updateAeratorSetting(data).subscribe({
       next: (response: PostResponse) => {
+        this.loading.hideLoading(response.error);
       },
       error: (error) => {
-        if(error.status === 403) {
-          this.snackBar.showSnackBar("Hanya admin yang dapat mengubah kontrol kincir!");
-        } else {
+        this.loading.hideLoading(true, () => {
           this.snackBar.showSnackBar(error.error.message);
-        }
+        });
       }
     })
   }
@@ -102,5 +117,4 @@ export class ToolsComponent implements OnInit {
     this.aeratorTime[num] = this.aeratorTime[num] - 5;
   }
 
-  onSwitchChange(){}
 }

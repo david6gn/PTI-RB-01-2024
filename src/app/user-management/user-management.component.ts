@@ -10,6 +10,7 @@ import { PostResponse } from '../../models/post-response';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackbarService } from '../../service/snackbar.service';
 import { LoadingService } from '../../service/loading.service';
+import { AuthService } from '../../service/auth.service';
 
 @Component({
   selector: 'app-user-management',
@@ -32,7 +33,8 @@ export class UserManagementComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private snackBar: SnackbarService,
-    private loading: LoadingService
+    private loading: LoadingService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -68,19 +70,29 @@ export class UserManagementComponent implements OnInit {
   }
 
   deleteUser(userId: string) {
+    const sessionId = this.authService.getUserId();
     this.loading.showLoading()
     this.apiService.deleteUser(userId).subscribe({
       next: (response: PostResponse) => {
-        console.log(response)
         if(!response.error) {
-          this.snackBar.showSnackBar(response.message);
-          this.getUserList();
+          this.loading.hideLoading(response.error, () => {
+            this.snackBar.showSnackBar(response.message);
+            if(sessionId === userId) {
+              this.authService.logout();
+            } else {
+              this.getUserList();
+            }
+          })
         } else {
-          this.snackBar.showSnackBar(response.message);
+          this.loading.hideLoading(response.error, () => {
+            this.snackBar.showSnackBar(response.message);
+          })
         }
       },
       error: (error) => {
-        console.log(error)
+        this.loading.hideLoading(true, () => {
+          this.snackBar.showSnackBar(error.error.message);
+        })
       }
     })
   }

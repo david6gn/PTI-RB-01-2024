@@ -7,6 +7,7 @@ import { ApiService } from '../../service/api.service';
 import { NewUserResponse } from '../../models/new-user-response';
 import { PostResponse } from '../../models/post-response';
 import { SnackbarService } from '../../service/snackbar.service';
+import { LoadingService } from '../../service/loading.service';
 
 @Component({
   selector: 'app-new-user',
@@ -27,7 +28,12 @@ export class NewUserComponent {
   isPasswordVisible: boolean[] = [false, false];
   newUserResponse: NewUserResponse | undefined;
 
-  constructor(private snackBar: SnackbarService, private apiService: ApiService, private location: Location){}
+  constructor(
+    private snackBar: SnackbarService, 
+    private apiService: ApiService, 
+    private location: Location,
+    private loading: LoadingService
+  ){}
 
   togglePasswordVisibility(num: number) {
     this.isPasswordVisible[num] = !this.isPasswordVisible[num]
@@ -36,7 +42,11 @@ export class NewUserComponent {
   validateInput() {
     if(this.checkEmptyInputs()) {
       if(this.checkPassword()) {
-        this.addNewUser();
+        if (!this.validatePassword()) {
+          this.snackBar.showSnackBar("Password harus minimal 8 karakter, mengandung huruf besar, huruf kecil, angka, dan karakter khusus (seperti !, @, #, $, %, ^, &, *).");
+        } else {
+          this.addNewUser();
+        }
       } else {
         this.snackBar.showSnackBar("Konfirmasi password tidak sesuai!");
       }
@@ -60,6 +70,11 @@ export class NewUserComponent {
     }
   }
 
+  validatePassword(): boolean {
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[0-9])(?=.*[a-z]).{8,}$/;
+    return passwordRegex.test(this.password);
+  }
+
   addNewUser() {
     const data = {
       user_email: this.email,
@@ -69,18 +84,25 @@ export class NewUserComponent {
       user_type: this.role
     }
 
+    this.loading.showLoading();
+
     this.apiService.addNewUser(data).subscribe({
       next: (response: NewUserResponse) => {
         if(!response.error) {
-          this.newUserResponse = response;
-          this.isOTPsent = true;
-          this.snackBar.showSnackBar(response.message);
+          this.loading.hideLoading(response.error, () => {
+            this.newUserResponse = response
+            this.isOTPsent = true;
+          });
         } else {
-          this.snackBar.showSnackBar(response.message);
+          this.loading.hideLoading(response.error, () => {
+            this.snackBar.showSnackBar(response.message);
+          });
         }
       },
       error: (error) => {
-        console.log(error)
+        this.loading.hideLoading(true, () => {
+          this.snackBar.showSnackBar(error.error.message);
+        });
       }
     })
   }
@@ -99,19 +121,26 @@ export class NewUserComponent {
       OTP: this.ngOtpInput.currentVal
     }
 
+    this.loading.showLoading();
+
     this.apiService.verifyNewUser(data, this.newUserResponse.userId).subscribe({
       next: (response: PostResponse) => {
         console.log(response)
         if (!response.error) {
-          this.snackBar.showSnackBar(response.message);
-          this.snackBar.showSnackBar("Akun berhasil dibuat!");
-          this.location.back()
+          this.loading.hideLoading(response.error, () => {
+            this.snackBar.showSnackBar(`${response.message} dan akun berhasil dibuat.`);
+            this.location.back()
+          });
         } else {
-          this.snackBar.showSnackBar(response.message);
+          this.loading.hideLoading(response.error, () => {
+            this.snackBar.showSnackBar(response.message);
+          });
         }
       },
       error: (error) => {
-        console.log(error)
+        this.loading.hideLoading(true, () => {
+          this.snackBar.showSnackBar(error.error.message);
+        });
       }
     })
   }

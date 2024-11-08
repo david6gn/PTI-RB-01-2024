@@ -22,7 +22,40 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this._onMessage();
+    this._requestNotificationPermission().then((permissionGranted) => {
+      if (permissionGranted) {
+        if ('serviceWorker' in navigator) {
+          console.log("serviceworker true");
+          navigator.serviceWorker.register('./firebase-messaging-sw.js')
+          .then((reg) => console.log("service worker registered", reg))
+          .catch((err) => console.log("service worker not registered", err))
+          // window.addEventListener('load', () => {
+          //   navigator.serviceWorker.register('./firebase-messaging-sw.js', { scope: "/" })
+          //     .then((registration) => {
+          //       console.log('Service Worker registered with scope:', registration.scope);
+          //     })
+          //     .catch((error) => {
+          //       console.log('Service Worker registration failed:', error);
+          //     });
+          // });
+          this._onMessage();
+        };
+      } else {
+        this.snackBar.showSnackBar("Notifikasi website tidak dapat ditampilkan, mohon izinkan notifikasi untuk mendapatkan notifikasi website");
+      }
+    });
+  }
+
+  private _requestNotificationPermission(): Promise<boolean> {
+    return new Promise((resolve) => {
+      Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    });
   }
 
   private _onMessage(): void {
@@ -34,6 +67,7 @@ export class AppComponent implements OnInit, OnDestroy {
       complete: () => console.log('Done listening to messages'),
     });
   }
+  
 
   ngOnDestroy(): void {
   }

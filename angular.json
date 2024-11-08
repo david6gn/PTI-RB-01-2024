@@ -16,6 +16,8 @@
             "outputPath": "dist/pti-sadewafarm",
             "index": "src/index.html",
             "browser": "src/main.ts",
+            "sourceMap": true,
+            "optimization": true,
             "polyfills": [
               "zone.js",
               "@angular/localize/init"
@@ -31,7 +33,9 @@
                 "input": "public/temp_item"
               },
               "src/firebase-messaging-sw.js",
-              "src/manifest.json"
+              "src/manifest.json",
+                "src/favicon.ico",
+                "src/assets"
             ],
             "styles": [
               "src/custom-theme.scss",
@@ -46,7 +50,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumError": "3MB"
                 },
                 {
                   "type": "anyComponentStyle",

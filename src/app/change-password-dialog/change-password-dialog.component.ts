@@ -91,14 +91,14 @@ export class ChangePasswordDialogComponent {
         this.apiService.verifyOTP(data).subscribe({
           next:(response: LoginResponse) => {
             if(response.error === true) {
-              alert(response.message)
+              alert(response.message);
             } else {
               localStorage.setItem('token', response.token);
               this.changePasswordStatus = true;
             }
           },
           error: (error) => {
-            console.log(error)
+            alert(error.error.message);
           }
         })
       }
@@ -106,9 +106,9 @@ export class ChangePasswordDialogComponent {
   }
 
   changePassword(): void {
-    const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-    if (!regex.test(this.password)) {
-      alert("Password minimal harus 8 karakter serta mengandung minimal 1 angka dan huruf!")
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[0-9])(?=.*[a-z]).{8,}$/;
+    if (!passwordRegex.test(this.password)) {
+      alert("Password harus minimal 8 karakter, mengandung huruf besar, huruf kecil, angka, dan karakter khusus (seperti !, @, #, $, %, ^, &, *).")
       return
     }
     const data = {
@@ -125,7 +125,7 @@ export class ChangePasswordDialogComponent {
         }
       },
       error: (error) => {
-        console.log(error)
+        alert(error.error.message);
       }
     });
   }

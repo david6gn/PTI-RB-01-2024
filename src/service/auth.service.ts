@@ -31,6 +31,14 @@ export class AuthService {
     return localStorage.getItem('userType') ?? '';
   }
 
+  setFCMToken(token: string) {
+    localStorage.setItem('fcm_token', token);
+  }
+  
+  getFCMToken(): string {
+    return localStorage.getItem('fcm_token') ?? 'xxxx';
+  }
+
   logout() {
     localStorage.clear();
   }

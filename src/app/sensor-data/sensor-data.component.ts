@@ -11,6 +11,8 @@ import { SensorResponse } from '../../models/sensor-response';
 import { PostResponse } from '../../models/post-response';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackbarService } from '../../service/snackbar.service';
+import { LoadingService } from '../../service/loading.service';
+import { AuthService } from '../../service/auth.service';
 
 @Component({
   selector: 'app-sensor-data',
@@ -38,7 +40,9 @@ export class SensorDataComponent implements OnInit, OnDestroy {
     private chartService: ChartService, 
     private socketService: SocketService,
     private apiService: ApiService,
-    private snackBar: SnackbarService
+    private snackBar: SnackbarService,
+    private loading: LoadingService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -241,14 +245,24 @@ export class SensorDataComponent implements OnInit, OnDestroy {
   }
 
   updateSensorSetting(): void {
+    if(this.authService.getUserType() !== "admin") {
+      this.snackBar.showSnackBar("Hanya admin yang dapat mengubah interval sensor!");
+      return
+    }
     if (this.sensorMaxEditable <= this.sensorMinEditable) {
       this.snackBar.showSnackBar("Nilai maksmimal tidak boleh lebih rendah dari nilai minimal!");
-      return
+      return;
     }
     if (this.sensorMinEditable >= this.sensorMaxEditable) {
       this.snackBar.showSnackBar("Nilai minimal tidak boleh lebih tinggi dari nilai maksimal!");
-      return
+      return;
     }
+    if (this.sensorMinEditable === this.sensorMinSetting && this.sensorMaxEditable === this.sensorMaxSetting) {
+      return;
+    }
+
+    this.loading.showLoading();
+
     const data = {
       min: this.sensorMinEditable,
       max: this.sensorMaxEditable
@@ -256,18 +270,19 @@ export class SensorDataComponent implements OnInit, OnDestroy {
     this.apiService.updateSensorSetting(data, this.sensorId).subscribe({
       next: (response: PostResponse) => {
         if(!response.error) {
-          this.snackBar.showSnackBar(response.message);
-          this.getSensorData();
+          this.loading.hideLoading(response.error, () => {
+            this.snackBar.showSnackBar(response.message);
+            this.getSensorData();
+          });
         } else {
-          console.log(response.message)
+          this.loading.hideLoading(true);
+          console.log(response.message);
         }
       },
       error: (error) => {
-        if(error.status === 403) {
-          this.snackBar.showSnackBar("Hanya admin yang dapat mengubah interval sensor!");
-        } else {
+        this.loading.hideLoading(true, () => {
           this.snackBar.showSnackBar(error.error.message);
-        }
+        });
       }
     });
   }

@@ -19,7 +19,7 @@ import { LoadingService } from '../../service/loading.service';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   
   private readonly _env = environment;
   private readonly _messaging: Messaging;
@@ -29,6 +29,7 @@ export class LoginComponent implements OnInit {
 
   username: string = '';
   password: string = '';
+  private forceLogin = false;
   constructor(
     private router: Router, 
     private apiService: ApiService, 
@@ -40,31 +41,70 @@ export class LoginComponent implements OnInit {
   ) {
     this._messaging = messaging;
   }
+  
 
-  ngOnInit(): void {
-    this._requestNotificationPermission();
-  }
-
-  private _requestNotificationPermission(): void {
-    Notification.requestPermission().then((permission) => {
-      if (permission === 'granted') {
-      } else {
-        this.snackBar.showSnackBar("Notifikasi website tidak dapat ditampilkan, mohon izinkan notifikasi untuk mendapatkan notifikasi website");
-      }
+  private async _getDeviceToken(retryCount: number = 3, delay: number = 1000): Promise<void> {
+    const timeout = 5000;
+    let timeoutReached = false;
+  
+    const timeoutPromise = new Promise<void>((_, reject) => {
+      setTimeout(() => {
+        timeoutReached = true
+        reject(new Error('Request timeout exceeded 5 seconds for service worker readiness'));
+      }, timeout);
     });
-  }
-
-
-  private _getDeviceToken(): void {
-    getToken(this._messaging, { vapidKey: this._env.vapidKey })
-      .then((token) => {
-        localStorage.setItem('fcm_token', token);
+  
+    const attemptRequest = async (): Promise<void> => {
+      try {
+        const registration = await Promise.race([navigator.serviceWorker.ready, timeoutPromise]);
+  
+        if (timeoutReached) {
+          throw new Error('Service worker registration timeout');
+        }
+  
+        if (!registration) {
+          throw new Error('Service worker registration failed');
+        }
+  
+        console.log(navigator.serviceWorker.getRegistration());
+  
+        const token = await getToken(this._messaging, { vapidKey: this._env.vapidKey, serviceWorkerRegistration: registration });
+        
+        if (!timeoutReached) {
+          this.authService.setFCMToken(token);
+          this.loginUser();
+        }
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.error('Token error:', error);
+          if (error.name === 'AbortError' && retryCount > 0) {
+            console.log(`Retrying to get token, attempts left: ${retryCount}`);
+            setTimeout(() => this._getDeviceToken(retryCount - 1, delay), delay);
+          } else {
+            console.error('Failed to get token after retries.');
+          }
+        } else {
+          console.error('Unexpected error:', error);
+        }
+      }
+    };
+  
+    try {
+      await attemptRequest();
+    } catch (error) {
+      if (!this.forceLogin) {
+        console.error('Operation failed or timeout:', error);
+        this.loading.hideLoading(true, () => {
+          this.forceLogin = true;
+          this.snackBar.showSnackBar("Terjadi kesalahan pada service notifikasi. Tekan 'Login' lagi untuk melakukan login tanpa notifikasi.");
+        });
+      } else {
         this.loginUser();
-      })
-      .catch((error) => {
-        console.log('Token error:', error);
-      });
+      }
+    }
   }
+  
+  
 
 
   togglePasswordVisibility() {
@@ -90,11 +130,12 @@ export class LoginComponent implements OnInit {
       this.isErrorVisible = true;
     } else {
       if (!this.validatePassword()) {
-        this.errorText = "Password tidak boleh dibawah 8 karakter!";
+        this.snackBar.showSnackBar("Password harus minimal 8 karakter, mengandung huruf besar, huruf kecil, angka, dan karakter khusus (seperti !, @, #, $, %, ^, &, *).")
+        this.errorText = "Password tidak sesuai!";
         this.isErrorVisible = true;
-      }  else {
-        this.loading.showLoading()
-        this._getDeviceToken()
+      } else {
+        this.loading.showLoading();
+        this._getDeviceToken();
         this.isErrorVisible = false;
       }
     }
@@ -109,18 +150,15 @@ export class LoginComponent implements OnInit {
   }
 
   validatePassword(): boolean {
-    if (this.password.length >= 8) {
-      return true;
-    } else {
-      return false;
-    }
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[0-9])(?=.*[a-z]).{8,}$/;
+    return passwordRegex.test(this.password);
   }
 
   loginUser(): void {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const isValidEmail = emailRegex.test(this.username);  
     let data = {};
-    const token = localStorage.getItem('fcm_token');
+    const token = this.authService.getFCMToken();
     if(isValidEmail) {
       data = {
         email: this.username,
@@ -137,14 +175,15 @@ export class LoginComponent implements OnInit {
     this.apiService.login(data).subscribe({
       next: (response: LoginResponse) => {
         console.log(response)
-        this.loading.hideLoading(() => {
+        this.loading.hideLoading(response.error, () => {
           this.authService.login(response.token, response.userId, response.type);
           this.snackBar.showSnackBar(response.message);
           this.router.navigate(['/dashboard']);
         });
       },
       error: (error) => {
-        this.loading.hideLoading()
+        this.loading.hideLoading(true)
+        console.log(error.error.message);
         this.snackBar.showSnackBar(error.error.message);
       }
     });

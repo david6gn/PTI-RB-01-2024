@@ -9,6 +9,6 @@ export class SnackbarService {
   constructor(private snackBar: MatSnackBar) { }
 
   showSnackBar(message: string) {
-    this.snackBar.open(message, undefined, { duration: 2000 });
+    this.snackBar.open(message, undefined, { duration: 3000 });
   }
 }

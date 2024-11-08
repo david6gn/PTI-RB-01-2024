@@ -23,14 +23,28 @@ export class LoadingDialogComponent implements OnInit, OnDestroy {
   };
 
   isLoading: boolean = true;
-  private loadingSubscription?: Subscription;
+  isError: boolean = false;
   @Output() animationEnd = new EventEmitter<void>(); 
 
   constructor(private loadingService: LoadingService, public dialogRef: MatDialogRef<LoadingDialogComponent>, private ref: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
-    this. loadingSubscription = this.loadingService.loading$.subscribe(isLoading => {
+    this.loadingService.error$.subscribe(isError => {
+      if (isError) {
+        this.options = {
+          ...this.options,
+          path: 'fail1.json'
+        }
+        this.animationItem?.setSpeed(1.5);
+      } else {
+        this.options = {
+          ...this.options,
+          path: 'success.json'
+        }
+      }
+    })
+    this.loadingService.loading$.subscribe(isLoading => {
       if (!isLoading && isLoading !== undefined) {
         this.isLoading = isLoading;
         this.ref.detectChanges();
@@ -49,7 +63,6 @@ export class LoadingDialogComponent implements OnInit, OnDestroy {
         this.dialogRef.close();
         this.animationItem!.destroy()
         this.animationItem = undefined;
-        this.loadingSubscription?.unsubscribe()
       }
     });
   }
@@ -57,15 +70,4 @@ export class LoadingDialogComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.animationItem?.destroy()
   }
-
-  // startAnimation() {
-  //   if (this.animationItem === undefined) {
-  //     console.log("animation item undefined");
-  //   } else {
-  //     console.log("masuk animation started");
-  //   }
-   
-  //   this.animationItem?.goToAndStop(0, true);
-  //   this.animationItem?.play();
-  // }
 }

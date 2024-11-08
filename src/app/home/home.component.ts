@@ -116,6 +116,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   async deleteDeviceToken(): Promise<void> {
     this.loading.showLoading()
+    if (this.authService.getFCMToken() === 'xxxx') {
+      this.logoutUser()
+      return;
+    }
     return deleteToken(this._messaging)
       .then(() => {
         this.logoutUser()
@@ -142,13 +146,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   logoutUser() {
     this.apiService.logout().subscribe({
       next: (response: PostResponse) => {
-        this.loading.hideLoading(() => {
+        this.loading.hideLoading(response.error, () => {
           this.authService.logout();
           this.snackBar.showSnackBar(response.message);
           this.router.navigate(['/']);;
         });
       },
       error: (error) => {
+        this.loading.hideLoading(true)
+        this.snackBar.showSnackBar(error.error.message);
         console.log(error);
       }
     });
