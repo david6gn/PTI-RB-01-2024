@@ -26,13 +26,13 @@ export class HomeComponent implements OnInit, OnDestroy {
   private readonly _messaging: Messaging;
   name: string = '';
   type: string = '';
-  gif: string [] = ["https://media.tenor.com/uwFCK7sFjYUAAAAd/wow-amazing.gif", "gif.gif"];
+  gif: string [] = ["https://media.tenor.com/uwFCK7sFjYUAAAAd/wow-amazing.gif", "bg_user.jpg"];
   imageuser: string = this.gif[Math.floor(Math.random() * this.gif.length)];
   isAdmin: boolean
 
   constructor(
     private router: Router, 
-    private route: ActivatedRoute, 
+    public route: ActivatedRoute, 
     private apiService: ApiService,
     private authService: AuthService, 
     private snackBar: SnackbarService,

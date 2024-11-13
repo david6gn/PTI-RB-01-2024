@@ -7,7 +7,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PostResponse } from '../../models/post-response';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackbarService } from '../../service/snackbar.service';
 import { LoadingService } from '../../service/loading.service';
 import { AuthService } from '../../service/auth.service';

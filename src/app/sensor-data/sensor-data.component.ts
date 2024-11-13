@@ -9,7 +9,6 @@ import { SocketService } from '../../service/socket.service';
 import { ApiService } from '../../service/api.service';
 import { SensorResponse } from '../../models/sensor-response';
 import { PostResponse } from '../../models/post-response';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackbarService } from '../../service/snackbar.service';
 import { LoadingService } from '../../service/loading.service';
 import { AuthService } from '../../service/auth.service';

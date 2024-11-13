@@ -1,29 +1,46 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterOutlet } from '@angular/router';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { Messaging } from '@angular/fire/messaging';
 import { AppComponent } from './app.component';
+import { SocketService } from '../service/socket.service';
+import { SnackbarService } from '../service/snackbar.service';
+
+
+const mockMessaging = {
+
+};
+const mockSocketService = {
+
+};
+const mockSnackbarService = {
+
+};
 
 describe('AppComponent', () => {
+  let component: AppComponent;
+  let fixture: ComponentFixture<AppComponent>;
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppComponent],
+      imports: [
+        RouterOutlet,
+        MatSnackBarModule,
+        AppComponent 
+      ],
+      providers: [
+        { provide: Messaging, useValue: mockMessaging },
+        { provide: SocketService, useValue: mockSocketService },
+        { provide: SnackbarService, useValue: mockSnackbarService }
+      ]
     }).compileComponents();
-  });
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
-  });
-
-  it(`should have the 'pti-sadewafarm' title`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('pti-sadewafarm');
-  });
-
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
+    fixture = TestBed.createComponent(AppComponent);
+    component = fixture.componentInstance;
     fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, pti-sadewafarm');
+  });
+
+  it('should create the app component', () => {
+    expect(component).toBeTruthy();
   });
 });

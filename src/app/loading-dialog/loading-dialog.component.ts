@@ -3,7 +3,6 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AnimationItem } from 'lottie-web';
 import { AnimationOptions, LottieComponent } from 'ngx-lottie';
-import { Subscription } from 'rxjs';
 import { LoadingService } from '../../service/loading.service';
 import { MatDialogRef } from '@angular/material/dialog';
 

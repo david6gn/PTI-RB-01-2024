@@ -29,15 +29,6 @@ export class AppComponent implements OnInit, OnDestroy {
           navigator.serviceWorker.register('./firebase-messaging-sw.js')
           .then((reg) => console.log("service worker registered", reg))
           .catch((err) => console.log("service worker not registered", err))
-          // window.addEventListener('load', () => {
-          //   navigator.serviceWorker.register('./firebase-messaging-sw.js', { scope: "/" })
-          //     .then((registration) => {
-          //       console.log('Service Worker registered with scope:', registration.scope);
-          //     })
-          //     .catch((error) => {
-          //       console.log('Service Worker registration failed:', error);
-          //     });
-          // });
           this._onMessage();
         };
       } else {
