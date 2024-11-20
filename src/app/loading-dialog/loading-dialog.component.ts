@@ -33,7 +33,7 @@ export class LoadingDialogComponent implements OnInit, OnDestroy {
       if (isError) {
         this.options = {
           ...this.options,
-          path: 'fail1.json'
+          path: 'fail.json'
         }
         this.animationItem?.setSpeed(1.5);
       } else {
