@@ -25,7 +25,6 @@ export class AppComponent implements OnInit, OnDestroy {
     this._requestNotificationPermission().then((permissionGranted) => {
       if (permissionGranted) {
         if ('serviceWorker' in navigator) {
-          console.log("serviceworker true");
           navigator.serviceWorker.register('./firebase-messaging-sw.js')
           .then((reg) => console.log("service worker registered", reg))
           .catch((err) => console.log("service worker not registered", err))
