@@ -102,11 +102,17 @@ export class ToolsComponent implements OnInit {
   }
 
   increaseFeedAmount(num: number) {
-    this.feedAmount[num] = this.feedAmount[num] + 10;
+    this.feedAmount[num] = this.feedAmount[num] + 100;
+    if(this.feedAmount[num] > 300) {
+      this.feedAmount[num] = 300
+    }
   }
 
   decreaseFeedAmount(num: number) {
-    this.feedAmount[num] = this.feedAmount[num] - 10;
+    this.feedAmount[num] = this.feedAmount[num] - 100;
+    if(this.feedAmount[num] < 0) {
+      this.feedAmount[num] = 0
+    }
   }
 
   increaseAeratorTime(num: number) {

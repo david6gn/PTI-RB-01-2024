@@ -103,9 +103,6 @@ export class LoginComponent {
       }
     }
   }
-  
-  
-
 
   togglePasswordVisibility() {
     this.isPasswordVisible = !this.isPasswordVisible;
