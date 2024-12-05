@@ -11,6 +11,7 @@ import { environment } from '../../environments/environment';
 import { AuthService } from '../../service/auth.service';
 import { SnackbarService } from '../../service/snackbar.service';
 import { LoadingService } from '../../service/loading.service';
+import { NotificationService } from '../../service/notification.service';
 
 @Component({
   selector: 'app-login',
@@ -37,72 +38,86 @@ export class LoginComponent {
     private dialog: MatDialog, 
     private authService: AuthService,
     messaging: Messaging,
-    private loading: LoadingService
+    private loading: LoadingService,
+    private notificationServie: NotificationService
   ) {
     this._messaging = messaging;
   }
   
 
-  private async _getDeviceToken(retryCount: number = 3, delay: number = 1000): Promise<void> {
-    const timeout = 5000;
+  private async _getDeviceToken(retryCount: number = 2, delay: number = 500): Promise<void> {
+    const timeout = 3000; 
     let timeoutReached = false;
   
-    const timeoutPromise = new Promise<void>((_, reject) => {
+    const timeoutPromise = new Promise<never>((_, reject) => {
       setTimeout(() => {
-        timeoutReached = true
-        reject(new Error('Request timeout exceeded 5 seconds for service worker readiness'));
+        timeoutReached = true;
+        reject(new Error(`Request timeout exceeded ${timeout / 1000} seconds for service worker readiness`));
       }, timeout);
     });
   
     const attemptRequest = async (): Promise<void> => {
       try {
-        const registration = await Promise.race([navigator.serviceWorker.ready, timeoutPromise]);
+        const registration = await Promise.race([
+          navigator.serviceWorker.ready,
+          timeoutPromise,
+        ]);
   
         if (timeoutReached) {
           throw new Error('Service worker registration timeout');
         }
   
         if (!registration) {
-          throw new Error('Service worker registration failed');
+          throw new Error('Service worker registration failed or unavailable');
         }
   
-        console.log(navigator.serviceWorker.getRegistration());
+        console.log('Service Worker registration:', registration);
   
-        const token = await getToken(this._messaging, { vapidKey: this._env.vapidKey, serviceWorkerRegistration: registration });
-        
-        if (!timeoutReached) {
-          this.authService.setFCMToken(token);
-          this.loginUser();
+        const token = await getToken(this._messaging, {
+          vapidKey: this._env.vapidKey,
+          serviceWorkerRegistration: registration,
+        });
+  
+        if (!token) {
+          throw new Error('Failed to retrieve FCM token');
         }
+  
+        this.authService.setFCMToken(token);
+        this.loginUser();
       } catch (error: unknown) {
         if (error instanceof Error) {
-          console.error('Token error:', error);
-          if (error.name === 'AbortError' && retryCount > 0) {
-            console.log(`Retrying to get token, attempts left: ${retryCount}`);
-            setTimeout(() => this._getDeviceToken(retryCount - 1, delay), delay);
+          console.error('Token error:', error.message);
+  
+          if (retryCount > 0) {
+            console.log(`Retrying to get token, attempts left: ${retryCount - 1}`);
+            await new Promise((resolve) => setTimeout(resolve, delay)); 
+            await attemptRequest();
           } else {
             console.error('Failed to get token after retries.');
+            throw error;
           }
         } else {
           console.error('Unexpected error:', error);
+          throw error;
         }
       }
     };
   
     try {
-      await attemptRequest();
-    } catch (error) {
       if (!this.forceLogin) {
-        console.error('Operation failed or timeout:', error);
-        this.loading.hideLoading(true, () => {
-          this.forceLogin = true;
-          this.snackBar.showSnackBar("Terjadi kesalahan pada service notifikasi. Tekan 'Login' lagi untuk melakukan login tanpa notifikasi.");
-        });
+        await attemptRequest();
       } else {
         this.loginUser();
       }
+    } catch (error) {
+      console.error('Operation failed or timeout:', error);
+      this.loading.hideLoading(true, () => {
+        this.forceLogin = true;
+        this.snackBar.showSnackBar("Terjadi kesalahan pada service notifikasi. Tekan 'Login' lagi untuk melakukan login tanpa notifikasi.");
+      });
     }
   }
+  
 
   togglePasswordVisibility() {
     this.isPasswordVisible = !this.isPasswordVisible;
@@ -131,9 +146,15 @@ export class LoginComponent {
         this.errorText = "Password tidak sesuai!";
         this.isErrorVisible = true;
       } else {
-        this.loading.showLoading();
-        this._getDeviceToken();
-        this.isErrorVisible = false;
+        if(this.notificationServie.checkPermission() === 'granted') {
+          this.loading.showLoading();
+          this._getDeviceToken();
+          this.isErrorVisible = false;
+        } else {
+          this.forceLogin = true
+          this.loading.showLoading();
+          this._getDeviceToken();
+        }
       }
     }
   }
